@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import 'babel-polyfill'
 import Element from 'element-ui'
+import {Loading} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Axios from 'axios'
 import Vuex from 'vuex'
@@ -18,12 +19,25 @@ import store from './store/store'
 Axios.interceptors.request.use(config => {
   // 在发送请求之前做些什么
   //判断是否存在token，如果存在将每个页面header都添加token
-  if(store.state.token){
-    config.headers.common['Authentication-Token']=store.state.token
+  if (store.state.token) {
+    config.headers.common['Authentication-Token'] = store.state.token
   }
+   let loading = Loading.service({
+    fullscreen: true,
+    text: '拼命加载中...',
+    // target:'#main'
+  });
+
   return config;
 }, error => {
   // 对请求错误做些什么
+  console.log("发送失败");
+  let loading = Loading.service({
+    fullscreen: true,
+    text: '拼命加载中...',
+  });
+  loading.close();
+
   return Promise.reject(error);
 });
 
@@ -45,10 +59,15 @@ Axios.interceptors.request.use(config => {
 // http response 拦截器
 Axios.interceptors.response.use(
   response => {
+    let loading = Loading.service({
+      fullscreen: true,
+      text: '拼命加载中...',
+      // target:'#main'
+    });
+      loading.close();
     return response;
   },
   error => {
-
     if (error.response) {
       switch (error.response.status) {
         case 401:
@@ -59,7 +78,15 @@ Axios.interceptors.response.use(
           })
       }
     }
-
+    // Notification.error({
+    //   title:"发送失败",
+    // message:error.message
+    // })
+    let loading = Loading.service({
+      fullscreen: true,
+      text: '拼命加载中...',
+    });
+      loading.close();
     return Promise.reject(error.response.data)
   });
 
