@@ -5,7 +5,6 @@
             <el-form-item label="起始时间">
                 <el-date-picker v-model="value6" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                 </el-date-picker>
-                </el-select>
             </el-form-item>
             <el-form-item label="账户">
                 <el-input v-model="formInline.account" placeholder="账户"></el-input>
@@ -21,12 +20,12 @@
                 </el-form-item>
         </el-form>
 
-        <el-table :data="tableData" style="width: 100%">
+        <el-table :data="tableData" sort-by="{tableData.date}" style="width: 100%">
             <el-table-column prop="fileName" label="文件名" width="300px">
             </el-table-column>
             <el-table-column prop="fileSize" label="文件大小" width="300px">
             </el-table-column>
-            <el-table-column prop="date" label="导出时间" width="300px">
+            <el-table-column prop="date" label="导出时间" width="300px" sortable>
             </el-table-column>
         </el-table>
     </div>

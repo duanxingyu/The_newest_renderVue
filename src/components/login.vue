@@ -93,8 +93,8 @@
               this.loginBtn = "登录"
               this.$message.error('账号或密码错误');
               console.log(error)
-              let loading = Loading.service({});
-              loading.close();
+              // let loading = Loading.service({});
+              // loading.close();
             })
 
           } else {

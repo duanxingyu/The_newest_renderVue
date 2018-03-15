@@ -33,10 +33,8 @@ Axios.interceptors.request.use(config => {
 }, error => {
   // 对请求错误做些什么
   console.log("发送失败");
-  let loading = Loading.service({
-    fullscreen: true,
-    text: '正在拼命加载中...',
-  });
+  console.log(error)
+  let loading = Loading.service({});
   loading.close();
 
   return Promise.reject(error);
@@ -73,11 +71,14 @@ Axios.interceptors.response.use(
             path: '/login',
             query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
           })
+        case 504:
+          this.$message.error('网络超时'+error.response.status);
       }
     }
+    console.log(error.response.status);
     this.$notify.error("请求数据失败")
     let loading = Loading.service({});
-      loading.close();
+    loading.close();
     return Promise.reject(error.response.data)
   });
 

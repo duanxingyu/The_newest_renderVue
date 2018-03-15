@@ -1,9 +1,8 @@
 <template>
     <div>
+      <h2>修改密码</h2><br />
         <el-row :gutter="20">
             <el-col :span="16">
-                <h2>修改密码</h2><br />
-
                 <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="旧密码" prop="oldPass">
                         <el-input type="password" v-model="ruleForm2.oldPass" auto-complete="off"></el-input>
@@ -101,6 +100,13 @@
     }
 </script>
 
-<style>
-
+<style scoped>
+  h2{
+    margin-left: 40%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+  }
+  form{
+    margin-left: 160px;
+  }
 </style>

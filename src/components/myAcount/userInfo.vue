@@ -160,7 +160,12 @@
     }
 </script>
 <style scoped>
-    #main>div>div {
-        margin-bottom: 60px;
-    }
+  h2{
+    margin-left: 40%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+  }
+  form{
+    margin-left: 160px;
+  }
 </style>
