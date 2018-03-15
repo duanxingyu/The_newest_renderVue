@@ -93,10 +93,7 @@
               this.loginBtn = "登录"
               this.$message.error('账号或密码错误');
               console.log(error)
-              let loading = Loading.service({
-                fullscreen: true,
-                text: '拼命加载中...',
-              });
+              let loading = Loading.service({});
               loading.close();
             })
 
