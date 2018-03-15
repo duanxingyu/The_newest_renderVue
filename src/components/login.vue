@@ -29,7 +29,7 @@
 
 <script>
   import store from '../store/store'
-
+  import {Loading} from 'element-ui'
   export default {
     name: "login",
     data() {
@@ -87,13 +87,17 @@
               }
 
 
-
             }).catch(error => {
               // this.$message.error(error.status)
               this.loading = false
               this.loginBtn = "登录"
               this.$message.error('账号或密码错误');
-              // console.log(error)
+              console.log(error)
+              let loading = Loading.service({
+                fullscreen: true,
+                text: '拼命加载中...',
+              });
+              loading.close();
             })
 
           } else {
