@@ -22,10 +22,11 @@ Axios.interceptors.request.use(config => {
   if (store.state.token) {
     config.headers.common['Authentication-Token'] = store.state.token
   }
+  //请求前到请求到数据这段时间用加载动画来代替
    let loading = Loading.service({
     fullscreen: true,
-    text: '拼命加载中...',
-    // target:'#main'
+    text: '正在拼命加载中...',
+    // target:'#app'
   });
 
   return config;
@@ -34,7 +35,7 @@ Axios.interceptors.request.use(config => {
   console.log("发送失败");
   let loading = Loading.service({
     fullscreen: true,
-    text: '拼命加载中...',
+    text: '正在拼命加载中...',
   });
   loading.close();
 
@@ -59,11 +60,7 @@ Axios.interceptors.request.use(config => {
 // http response 拦截器
 Axios.interceptors.response.use(
   response => {
-    let loading = Loading.service({
-      fullscreen: true,
-      text: '拼命加载中...',
-      // target:'#main'
-    });
+    let loading = Loading.service({});
       loading.close();
     return response;
   },
@@ -78,14 +75,8 @@ Axios.interceptors.response.use(
           })
       }
     }
-    // Notification.error({
-    //   title:"发送失败",
-    // message:error.message
-    // })
-    let loading = Loading.service({
-      fullscreen: true,
-      text: '拼命加载中...',
-    });
+    this.$notify.error("请求数据失败")
+    let loading = Loading.service({});
       loading.close();
     return Promise.reject(error.response.data)
   });
@@ -117,27 +108,3 @@ new Vue({
   components: {App},
   template: '<App/>'
 });
-
-
-// 路由跳转
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.requireAuth) {
-//     // 检查localStorage
-//     if (store.state.token) {
-//       // store.commit('set_token', store.state.token)
-//       // 添加axios头部Authorized
-//       Axios.defaults.auth = {
-//         username: store.state.token,
-//         password: store.state.token,
-//       }
-//       next()
-//     } else {
-//       next({
-//         path: '/login',
-//         query: {redirect: to.fullPath}
-//       })
-//     }
-//   } else {
-//     next()
-//   }
-// })
