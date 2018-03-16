@@ -20,14 +20,26 @@
                 </el-form-item>
         </el-form>
 
-        <el-table :data="tableData" sort-by="{tableData.date}" style="width: 100%">
-            <el-table-column prop="fileName" label="文件名" width="300px">
+        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" sort-by="{tableData.name}" style="width: 100%">
+          <el-table-column prop="id" label="id" width="240px" sortable>
+          </el-table-column>
+
+          <el-table-column prop="fileName" label="文件名" width="240px" sortable>
             </el-table-column>
-            <el-table-column prop="fileSize" label="文件大小" width="300px">
+            <el-table-column prop="fileSize" label="文件大小" width="240px">
             </el-table-column>
-            <el-table-column prop="date" label="导出时间" width="300px" sortable>
+            <el-table-column prop="date" label="导出时间" width="240px" sortable>
             </el-table-column>
         </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-sizes="[5,10, 20, 30, 40]"
+        :page-size="this.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pages.total">
+      </el-pagination>
     </div>
 </template>
 
@@ -68,48 +80,60 @@
                         }
                     }]
                 },
+              options:[
+                {
+                  value:'123456789'
+                }
+              ],
                 value6: '',
                 value7: '',
-                tableData: [{
-                    date: '2016-05-02',
-                    fileName: '王小虎',
-                    fileSize: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    fileName: '王小虎',
-                    fileSize: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-01',
-                    fileName: '王小虎',
-                    fileSize: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-03',
-                    fileName: '王小虎',
-                    fileSize: '上海市普陀区金沙江路 1518 弄'
-                }],
-                options: [{
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
-                value: ''
+                tableData: [],
+                value: '',
+              currentPage: 1,
+              pageSize:10,
+              pages:{},
+              // per_page:null,
+              // page:null
+
             }
         },
+      created(){
+          this.getData();
+      },
         methods: {
             onSubmit() {
                 console.log('submit!');
-            }
+            },
+          handleSizeChange(size) {
+            this.pageSize=size
+            // this.fetchPapers();
+            console.log(`每页 ${size} 条`);
+          },
+          // fetchPapers() {
+          //   var recordUrl = this.HOST + '/record';
+          //   this.$axios.get(recordUrl+`/per_page=${this.per_page}`+'&'+`page=${this.page}`)
+          // },
+          handleCurrentChange(currentPage) {
+              this.currentPage=currentPage
+            // this.getData();
+            console.log(`当前页: ${currentPage}`);
+          },
+          getData(){
+            var recordUrl = this.HOST + '/record';
+            this.$axios.get(recordUrl, {
+              params:{
+                per_page:200,
+                page:1
+              }
+            }).then(res=>{
+              console.log(res.data);
+              this.pages=res.data;
+              this.tableData=res.data.items
+              console.log(res.data.items)
+            }).catch(error=>{
+              console.log(error);
+            })
+          }
         }
     }
 </script>

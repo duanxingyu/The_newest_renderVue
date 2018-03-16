@@ -89,7 +89,7 @@
       // });
       // console.log(localStorage.token);
       this.$axios.get(url).then(res => {
-        console.log(res.headers)
+        // console.log(res.headers)
         // console.log(res.data)
         this.tableData5 = res.data
         if (store.state.token) {

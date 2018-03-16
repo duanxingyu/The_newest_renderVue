@@ -60,10 +60,10 @@
             </el-table-column>
             <el-table-column label="操作" width="350px">
                 <template slot-scope="scope">
-                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="mini" type="info" @click="handleIn(scope.$index, scope.row)">转入</el-button>
-                    <el-button size="mini" @click="handleOut(scope.$index, scope.row)">转出</el-button>
-                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">修改密码</el-button>
+                    <el-button size="mini" round @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="mini" round type="info" @click="handleIn(scope.$index, scope.row)">转入</el-button>
+                    <el-button size="mini" round @click="handleOut(scope.$index, scope.row)">转出</el-button>
+                    <el-button size="mini" round type="danger" @click="handleDelete(scope.$index, scope.row)">修改密码</el-button>
                 </template>
             </el-table-column>
         </el-table>
