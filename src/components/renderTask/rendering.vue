@@ -2,10 +2,13 @@
   <div>
     <h2>正在渲染任务</h2><br/>
     <span>测试Checked:{{multipleSelection}}</span><br/>
-    <el-badge :value="12" class="item">
-      <el-button type="primary" size="medium" icon="el-icon-tickets">列表</el-button>
+    <div class="btn">
+    <el-badge :value="this.value" class="item">
+      <el-button type="primary" size="medium" icon="el-icon-tickets" @click.once="listCount">列表</el-button>
     </el-badge>
     <el-button-group style="margin-left: 15px;">
+      <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-download">&nbsp;导出</i>
+      </el-button>
       <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-delete">&nbsp;移除</i></el-button>
       <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-refresh">&nbsp;恢复</i></el-button>
       <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-time">&nbsp;全速</i></el-button>
@@ -13,7 +16,7 @@
       </el-button>
     </el-button-group>
     <br/>
-
+    </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="任务号">
         <el-input v-model="formInline.user" placeholder="任务号"></el-input>
@@ -38,7 +41,8 @@
       </el-form-item>
     </el-form>
 
-    <el-table :data="tableData5"   ref="multipleTable" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table :data="tableData5" sort-by="{tableData5.id}" ref="multipleTable" style="width: 100%;margin-left: 10px;"
+              @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="35" v-model="multipleSelection">
       </el-table-column>
       <el-table-column type="expand">
@@ -81,6 +85,9 @@
       <el-table-column label="描述" prop="desc">
       </el-table-column>
     </el-table>
+
+
+
   </div>
 </template>
 
@@ -102,7 +109,8 @@
 </style>
 
 <script>
-import store from '../../store/store'
+  import store from '../../store/store'
+
   export default {
     name: "rendering",
     data() {
@@ -112,6 +120,7 @@ import store from '../../store/store'
           user: '',
           region: ''
         },
+        value: '15',
         //单选框
         checked: false,
         // loading:true,
@@ -147,29 +156,24 @@ import store from '../../store/store'
         //data数据
         tableData5: [],
         multipleSelection: [],
+
       }
     },
     created() {
       var url = this.HOST + "/info";
-      // const obj = axios.create({
-      //       // headers: {'Authentication-Token': 'WyIyIiwiJDUkcm91bmRzPTUzNTAwMCROcmphcmV4SnJFUUNiTTZrJEt2c24zckdhdC90OGM4c0VCVHlpNVdZbFNZbFIwMDRiZkREZHc2TEF4bEIiXQ.DYflpQ.1rhB6psfKzZ5aILlInIl254r7DM'}
-      //       headers:{
-      //         'Authentication-Token': store.state.token
-      //       }
-      //
-      // });
       // console.log(localStorage.token);
-      this.$axios.get(url).then(res=>{
+      this.$axios.get(url).then(res => {
         // console.log(res.data)
-        this.tableData5=res.data
-        if (store.state.token){
+        this.tableData5 = res.data
+        if (store.state.token) {
           this.$router.push('/rendering');
-        }else{
+        } else {
           this.$router.replace('/login');
         }
-      }).catch(error=>{
+      }).catch(error => {
         console.log(error)
-      })
+      });
+
     },
     methods: {
       onSubmit() {
@@ -190,12 +194,20 @@ import store from '../../store/store'
             type: 'success'
           });
         }
-      }
+      },
+      listCount() {
+        this.$message('当前列表共' + this.value + '条数据，已查看');
+        this.value = '';
+      },
+
     },
   }
 </script>
 <style scoped>
   #main > div > form {
     margin-top: 20px;
+  }
+  h2,.btn,.el-pagination,form{
+    margin: 10px 10px;
   }
 </style>

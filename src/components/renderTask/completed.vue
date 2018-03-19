@@ -2,12 +2,15 @@
   <div>
     <h2>已完成任务</h2>
     <span>测试Checked:{{multipleSelection}}</span><br/>
-    <el-badge :value="12" class="item">
-      <el-button type="primary" size="medium" icon="el-icon-tickets">列表</el-button>
-    </el-badge>
-    <el-button type="primary" size="medium" @click="slectCheckbox" style="margin-left: 15px;"><i
-      class="el-icon-download">&nbsp;导出</i></el-button>
-    <el-table :data="tableData5" style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}"
+    <div class="btn">
+      <el-badge :value="12" class="item">
+        <el-button type="primary" size="medium" icon="el-icon-tickets">列表</el-button>
+      </el-badge>
+      <el-button type="primary" size="medium" @click="slectCheckbox" style="margin-left: 15px;"><i
+        class="el-icon-download">&nbsp;导出</i></el-button>
+    </div>
+    <el-table :data="tableData5" style="width: 100%;margin-left: 10px"
+              :default-sort="{prop: 'date', order: 'descending'}"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="35">
       </el-table-column>
@@ -121,3 +124,8 @@
     }
   }
 </script>
+<style scoped>
+  h2, .btn, .el-pagination, form {
+    margin: 10px 10px;
+  }
+</style>
