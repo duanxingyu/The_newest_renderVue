@@ -4,6 +4,7 @@ import store from '../store/store'
 import * as types from '../store/type'
 
 import Login from '@/components/login'
+import Register from '@/components/register'
 import Layout from '@/pages/layout'
 import Rendering from '@/components/renderTask/rendering'
 import Completed from '@/components/renderTask/completed'
@@ -59,6 +60,12 @@ const routes = [{
 
 }, {
   path: '/login',
+  component: Login
+}, {
+  path: '/register',
+  component: Register
+}, {
+  path: '/forgetPass',
   component: Login
 }]
 

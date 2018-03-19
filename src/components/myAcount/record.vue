@@ -20,7 +20,7 @@
                 </el-form-item>
         </el-form>
 
-        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" sort-by="{tableData.name}" style="width: 100%">
+        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" sort-by="{tableData.name}" style="width: 100%;margin-left:10px">
           <el-table-column prop="id" label="id" width="240px" sortable>
           </el-table-column>
 
@@ -139,5 +139,7 @@
 </script>
 
 <style scoped>
-
+h2,form,.el-pagination{
+  margin: 10px 10px;
+}
 </style>

@@ -1,12 +1,13 @@
 <template>
     <div>
         <h2>子账户管理</h2><br/>
+      <div class="btn">
       <el-badge :value="12" class="item">
         <el-button type="primary" size="medium" icon="el-icon-tickets" >列表</el-button>
       </el-badge>
 
       <el-button type="success" size="medium" icon="el-icon-plus" @click="dialogFormVisible = true" style="margin-left: 15px">添加子账号</el-button>
-
+      </div>
       <!--对话框-->
       <el-dialog width="40%" title="添加子账号" :visible.sync="dialogFormVisible">
         <el-form :model="form">
@@ -36,7 +37,7 @@
       </el-dialog>
 
 
-      <el-table :data="tableData" sort-by="{tableData.phone}" style="width: 100%">
+      <el-table :data="tableData" sort-by="{tableData.phone}" style="width: 100%;margin-left: 10px;">
 
             <el-table-column label="用户名" width="180">
                 <template slot-scope="scope">
@@ -136,6 +137,8 @@
     }
 </script>
 
-<style>
-
+<style scoped>
+.btn,h2{
+  margin: 10px 10px;
+}
 </style>

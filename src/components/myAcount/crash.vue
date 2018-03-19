@@ -1,8 +1,8 @@
 <template>
     <div>
         <h2>代金券</h2><br />
-        <el-button type="primary" size="medium"><router-link to="/reCharge">充值代金券</router-link></el-button>
-        <el-table :data="tableData" stripe sort-by="{tableData.address}">
+      <router-link to="/reCharge"><el-button type="primary" size="medium">充值代金券</el-button></router-link>
+        <el-table :data="tableData" stripe sort-by="{tableData.address}" style="margin-left: 10px">
             <el-table-column prop="address" label="代金券号码" width="350px" sortable>
             </el-table-column>
             <el-table-column prop="name" label="面值" width="350px">
@@ -43,5 +43,8 @@
 <style scoped>
   #main > div > button > span > a{
     color: #fff;
+  }
+  button,h2{
+    margin: 10px 10px;
   }
 </style>

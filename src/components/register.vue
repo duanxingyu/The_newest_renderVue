@@ -5,26 +5,37 @@
 
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-loginForm"
                  style="margin-left: 100px;">
-          <h2>用户登录</h2>
+          <h2>用户注册</h2>
           <el-form-item label="用户名:" prop="username">
             <el-input v-model="loginForm.username">{{loginForm.username}}</el-input>
           </el-form-item>
+
+          <el-form-item label="手机号:" prop="phone">
+            <el-input v-model="loginForm.phone">{{loginForm.phone}}</el-input>
+            <el-button @click="sendMsg">点击获取验证码</el-button>
+          </el-form-item>
+
+          <el-form-item label="手机验证码:" prop="validateCode">
+            <el-input v-model="loginForm.validateCode">{{loginForm.validateCode}}</el-input>
+          </el-form-item>
+
           <el-form-item label="密码" prop="pass">
             <el-input type="password" v-model="loginForm.pass" auto-complete="off">{{loginForm.pass}}</el-input>
           </el-form-item>
+
+          <el-form-item label="确认密码" prop="confirmPass">
+            <el-input type="password" v-model="loginForm.confirmPass" auto-complete="off">{{loginForm.pass}}</el-input>
+          </el-form-item>
+
           <!--<p v-model="token"></p>-->
           <el-form-item>
-            <el-button type="primary" @click="submitForm('loginForm')" :loading="loading" v-model="loginBtn">
-              {{loginBtn}}
+            <el-button type="primary" @click="submitForm('loginForm')" :loading="loading">
+              立即注册
             </el-button>
             <el-button @click="resetForm('loginForm')">重置</el-button>
 
           </el-form-item>
-          <el-form-item>
-            <router-link to="/register">还没注册？ </router-link>
-            <span>||</span>
-            <router-link to="/forgetPass">  忘记密码？ </router-link>
-          </el-form-item>
+
 
         </el-form>
       </el-col>
@@ -36,15 +47,37 @@
 <script>
   import store from '../store/store'
   import {Loading} from 'element-ui'
+
   export default {
-    name: "login",
+    name: "register",
     data() {
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.loginForm.confirmPass !== '') {
+            this.$refs.loginForm.validateField('confirmPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.loginForm.pass) {
+          callback(new Error('两次输入密码不一致'));
+        } else {
+          callback();
+        }
+      };
       return {
-        loginBtn: '登录',
         loading: false,
         loginForm: {
           username: '',
+          phone: '',
+          validateCode: '',
           pass: '',
+          confirmPass: '',
           token: ''
         },
         rules: {
@@ -56,8 +89,25 @@
           pass: [{
             required: true,
             message: '密码不能为空',
+            trigger: 'blur',
+            validator: validatePass
+          }],
+          phone: [{
+            required: true,
+            message: '手机号不能为空',
             trigger: 'blur'
-          }]
+          }],
+          validateCode: [{
+            required: true,
+            message: '验证码不能为空',
+            trigger: 'blur'
+          }],
+          confirmPass: [{
+            required: true,
+            // message: '确认密码不能为空',
+            trigger: 'blur',
+            validator: validatePass2
+          }],
         },
         token: '',
       }
@@ -71,36 +121,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.loading = true
-            this.loginBtn = "登录中..."
-            var url = this.HOST + "/session";
-            //根据api接口获取token
-            this.$axios.post(url, {
-              username: this.loginForm.username,
-              password: this.loginForm.pass
-            }).then(res => {
-              // console.log(res.data);
-              this.$message.success('登录成功');
-              let data = res.data;
-              //根据store中set_token方法将token保存至localStorage中，data["Authentication-Token"]，获取token的value值
-              this.$store.commit('set_token', data["Authentication-Token"]);
 
-              if (store.state.token) {
-                this.$router.push('/')
-                console.log(store.state.token)
-              } else {
-                this.$router.replace('/login');
-              }
-
-
-            }).catch(error => {
-              this.loading = false
-              this.loginBtn = "登录"
-              this.$message.error('账号或密码错误');
-              let loading = Loading.service({});
-              loading.close();
-              console.log(error);
-            })
           } else {
 
             console.log('error submit!!');
@@ -112,6 +133,9 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      sendMsg() {
+
       }
     },
 
@@ -133,7 +157,7 @@
     color: #606266;
     /*display: inline-block;*/
     font-size: inherit;
-    height: 450px;
+    height: 600px;
     width: 45%;
 
     padding: 50px 15px;
@@ -142,10 +166,11 @@
   #login h2 {
     margin-bottom: 50px;
   }
-a{
-  text-decoration: none;
-  color: #478aff;
-  padding-left: 5px;
-}
+
+  a {
+    text-decoration: none;
+    color: #478aff;
+    padding-left: 5px;
+  }
 
 </style>
