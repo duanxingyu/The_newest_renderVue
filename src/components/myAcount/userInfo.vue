@@ -8,7 +8,7 @@
                         <el-input v-model="ruleForm.username"></el-input>
                     </el-form-item>
                     <el-form-item label="手机号:" prop="phone">
-                        <el-input v-model="ruleForm.phone"></el-input>
+                        <el-input v-model.number="ruleForm.phone"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱:" prop="email">
                         <el-input v-model="ruleForm.email"></el-input>
@@ -47,6 +47,18 @@
 <script>
     export default {
         data() {
+          // 验证手机号
+          var CheckTel = (rule, value, callback) => {
+            if (!value) {
+              callback(new Error('请输入手机号码'));
+            } else if (!Number.isInteger(value)) {
+              callback(new Error('手机号码必须是数字'));
+            } else if (value.toString().length != 11) {
+              callback(new Error('手机号码必须是11位'));
+            } else {
+              callback();
+            }
+          };
             return {
                 ruleForm: {
                     username: '',
@@ -74,15 +86,9 @@
                     ],
                     phone: [{
                             required: true,
-                            message: '请输入手机号',
-                            trigger: 'blur'
+                            validator:CheckTel,
+                            trigger: 'blur',
 
-                        },
-                        {
-                            min: 11,
-                            max: 11,
-                            message: '手机号为11位数字组成',
-                            trigger: 'blur'
                         }
                     ],
                     email: [{

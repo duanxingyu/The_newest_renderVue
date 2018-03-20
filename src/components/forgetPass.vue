@@ -5,13 +5,10 @@
 
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-loginForm"
                  style="margin-left: 100px;">
-          <h2>用户注册</h2>
-          <el-form-item label="用户名:" prop="username">
-            <el-input v-model="loginForm.username">{{loginForm.username}}</el-input>
-          </el-form-item>
+          <h2>忘记密码</h2>
 
           <el-form-item label="手机号:" prop="phone">
-            <el-input v-model="loginForm.phone">{{loginForm.phone}}</el-input>
+            <el-input v-model="loginForm.phone" >{{loginForm.phone}}</el-input>
             <el-button v-show="show" @click="sendMsg" class="validateCode">点击获取验证码</el-button>
             <el-button v-show="!show" style="margin-left: 0px"  class="validateCode">{{count}}秒后，重新获取</el-button>
           </el-form-item>
@@ -31,7 +28,7 @@
           <!--<p v-model="token"></p>-->
           <el-form-item>
             <el-button type="primary" @click="submitForm('loginForm')" :loading="loading">
-              注册
+              提交
             </el-button>
             <el-button @click="resetForm('loginForm')">重置</el-button>
 
@@ -50,7 +47,7 @@
   import {Loading} from 'element-ui'
 
   export default {
-    name: "register",
+    name: "forgetPass",
     data() {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -83,7 +80,7 @@
           validateCode: '',
           pass: '',
           confirmPass: '',
-          token: '',
+          token: ''
         },
         rules: {
           username: [{
@@ -140,22 +137,24 @@
         this.$refs[formName].resetFields();
       },
       sendMsg() {
-       const TIME_COUNT=180;
-       this.disabled=false;
-       if(!this.timer) {
-         this.count=TIME_COUNT;
-         this.show=false;
-         this.timer=setInterval(()=>{
-           if(this.count>0&&this.count<=TIME_COUNT) {
-             this.count--;
-           }else {
-             this.show=true;
-             clearInterval(this.timer);
-             this.timer=null;
-             this.disabled=true;
-           }
-         },1000)
-       }
+
+
+        const TIME_COUNT=180;
+        this.disabled=false;
+        if(!this.timer) {
+          this.count=TIME_COUNT;
+          this.show=false;
+          this.timer=setInterval(()=>{
+            if(this.count>0&&this.count<=TIME_COUNT) {
+              this.count--;
+            }else {
+              this.show=true;
+              clearInterval(this.timer);
+              this.timer=null;
+              this.disabled=true;
+            }
+          },1000)
+        }
       }
     },
 
@@ -177,7 +176,7 @@
     color: #606266;
     /*display: inline-block;*/
     font-size: inherit;
-    height: 600px;
+    height: 500px;
     width: 45%;
 
     padding: 50px 15px;
@@ -192,8 +191,7 @@
     color: #478aff;
     padding-left: 5px;
   }
-  .validateCode{
-    float: left;
-  }
-
+.validateCode{
+  float: left;
+}
 </style>
