@@ -71,7 +71,7 @@
 
 <script>
   import axios from 'axios'
-  import store from '../../store/store'
+  import store from '../../../store/store'
 
   export default {
     name: 'completed',

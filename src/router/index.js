@@ -7,15 +7,15 @@ import Login from '@/components/login'
 import Register from '@/components/register'
 import ForgetPass from '@/components/forgetPass'
 import Layout from '@/pages/layout'
-import Rendering from '@/components/renderTask/rendering'
-import Completed from '@/components/renderTask/completed'
-import UserInfo from '@/components/myAcount/userInfo'
-import ModifyPass from '@/components/myAcount/modifyPass'
-import ChildAcount from '@/components/myAcount/childAcount'
-import Record from '@/components/myAcount/record'
-import Crash from '@/components/myAcount/crash'
-import ReCharge from '@/components/myAcount/reCharge'
-import Setting from '@/components/myAcount/setting'
+import Rendering from '@/components/users/renderTask/rendering'
+import Completed from '@/components/users/renderTask/completed'
+import UserInfo from '@/components/users/myAcount/userInfo'
+import ModifyPass from '@/components/users/myAcount/modifyPass'
+import ChildAcount from '@/components/users/myAcount/childAcount'
+import Record from '@/components/users/myAcount/record'
+import Crash from '@/components/users/myAcount/crash'
+import ReCharge from '@/components/users/myAcount/reCharge'
+import Setting from '@/components/users/myAcount/setting'
 
 
 Vue.use(Router)
@@ -77,6 +77,27 @@ const routes = [{
 }, {
   path: '/forgetPass',
   component: ForgetPass
+},{
+  path:'/allJobs',
+  component:(resolve)=>require(['../components/admins/account/allUsers.vue'],resolve)
+},{
+  path:'/customer',
+  component:(resolve)=>require(['../components/admins/account/customer.vue'],resolve)
+},{
+  path:'/renderManger',
+  component:(resolve)=>require(['../components/admins/account/renderManger.vue'],resolve)
+},{
+  path:'/salesMan',
+  component:(resolve)=>require(['../components/admins/account/salesMan.vue'],resolve)
+},{
+  path:'/visitor',
+  component:(resolve)=>require(['../components/admins/account/visitor.vue'],resolve)
+},{
+  path:'/roles',
+  component:(resolve)=>require(['../components/admins/account/roles.vue'],resolve)
+},{
+  path:'/deadlineUsers',
+  component:(resolve)=>require(['../components/admins/account/deadlineUsers.vue'],resolve)
 }]
 
 
@@ -90,21 +111,21 @@ const router = new Router({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(r => r.meta.requireAuth)) {
-    if (store.state.token) {
-      next();
-    }
-    else {
-      next({
-        path: '/login',
-        query: {redirect: to.fullPath}
-      })
-    }
-  }
-  else {
-    next();
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(r => r.meta.requireAuth)) {
+//     if (store.state.token) {
+//       next();
+//     }
+//     else {
+//       next({
+//         path: '/login',
+//         query: {redirect: to.fullPath}
+//       })
+//     }
+//   }
+//   else {
+//     next();
+//   }
+// })
 
 export default router;

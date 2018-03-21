@@ -85,9 +85,9 @@
         </el-form-item>
         <el-form-item label="支付方式" :label-width="formLabelWidth">
           <el-radio-group v-model="radio2">
-            <el-radio :label="1"><img src="../../assets/alipay.svg" width="40" height="40"></el-radio>
-            <el-radio :label="2"><img src="../../assets/weixin.svg" width="40" height="40"></el-radio>
-            <el-radio :label="3"><img src="../../assets/yinlian.svg" width="50" height="50"></el-radio>
+            <el-radio :label="1"><img src="../../../assets/alipay.svg" width="40" height="40"></el-radio>
+            <el-radio :label="2"><img src="../../../assets/weixin.svg" width="40" height="40"></el-radio>
+            <el-radio :label="3"><img src="../../../assets/yinlian.svg" width="50" height="50"></el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
