@@ -3,19 +3,22 @@
     <h2>正在渲染任务</h2><br/>
     <span>测试Checked:{{multipleSelection}}</span><br/>
     <div class="btn">
-    <el-badge :value="this.value" class="item">
-      <el-button type="primary" size="medium" icon="el-icon-tickets" @click.once="listCount">列表</el-button>
-    </el-badge>
-    <el-button-group style="margin-left: 15px;">
-      <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-download">&nbsp;导出</i>
-      </el-button>
-      <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-delete">&nbsp;移除</i></el-button>
-      <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-refresh">&nbsp;恢复</i></el-button>
-      <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-time">&nbsp;全速</i></el-button>
-      <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-caret-left el-icon-caret-right">&nbsp;停止</i>
-      </el-button>
-    </el-button-group>
-    <br/>
+      <el-badge :value="this.value" class="item">
+        <el-button type="primary" size="medium" icon="el-icon-tickets" @click.once="listCount">列表</el-button>
+      </el-badge>
+      <el-button-group style="margin-left: 15px;">
+        <el-button type="primary" size="medium" @click="export2Excel"><i class="el-icon-download">&nbsp;导出</i>
+        </el-button>
+        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-delete">&nbsp;移除</i>
+        </el-button>
+        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-refresh">&nbsp;恢复</i>
+        </el-button>
+        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-time">&nbsp;全速</i></el-button>
+        <el-button type="primary" size="medium" @click="slectCheckbox"><i
+          class="el-icon-caret-left el-icon-caret-right">&nbsp;停止</i>
+        </el-button>
+      </el-button-group>
+      <br/>
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="任务号">
@@ -87,7 +90,6 @@
     </el-table>
 
 
-
   </div>
 </template>
 
@@ -156,6 +158,29 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      //导出表格
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => v[j]))
+      },
+      export2Excel() {
+        if (this.multipleSelection.length) {
+          import('@/vendor/Export2Excel').then(excel => {
+            const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
+            const filterVal = ['id', 'name', 'number', 'shopId', 'desc']
+            const list = this.multipleSelection
+            const data = this.formatJson(filterVal, list)
+            excel.export_json_to_excel(tHeader, data, 'table')
+            this.$refs.multipleTable.clearSelection()
+          })
+
+        } else {
+          this.$message({
+            message: '请至少勾选一项，再进行操作',
+            type: 'warning'
+          });
+
+        }
+      },
       slectCheckbox() {
         if (this.multipleSelection.length === 0) {
           this.$message({
@@ -181,7 +206,8 @@
   #main > div > form {
     margin-top: 20px;
   }
-  h2,.btn,.el-pagination,form{
+
+  h2, .btn, .el-pagination, form {
     margin: 10px 10px;
   }
 </style>

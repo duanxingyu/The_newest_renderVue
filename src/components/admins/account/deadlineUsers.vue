@@ -1,9 +1,14 @@
 <template>
   <div>
     <h2>DeadlineUsers</h2>
+    测试checked:{{multipleSelection}}
     <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
+
       <el-tab-pane label="列表(23)" name="first">
-        <el-table :data="tableData" sort-by="{tableData.DIUserName}" align="header-align" style="width: 100%;margin-left: 10px;">
+        <el-button type="primary" class="delete" @click="slectCheckbox" icon="el-icon-delete">批量删除</el-button>
+
+        <el-table :data="tableData" sort-by="{tableData.DIUserName}" align="header-align"
+                  @selection-change="handleSelectionChange"   style="width: 100%;margin-left: 10px;">
           <el-table-column type="selection" width="35" v-model="multipleSelection">
 
           </el-table-column>
@@ -42,7 +47,6 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-
 
               <el-form-item label="Dl User Name  :" prop="DIUserName">
                 <el-input v-model="form.DIUserName"></el-input>
@@ -85,7 +89,7 @@
     name: "deadlineUsers",
     data() {
       return {
-        dis:false,
+        dis: false,
         dialogFormVisible: false,
         form: {
           user: '',
@@ -124,9 +128,9 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            var addArr={
-              user:this.form.user,
-              DIUserName:this.form.DIUserName
+            var addArr = {
+              user: this.form.user,
+              DIUserName: this.form.DIUserName
             };
             this.tableData.push(addArr)
             this.$notify({
@@ -136,7 +140,7 @@
             });
             // this.form.user='',
             //   this.form.DIUserName=''
-            this.dis=!this.dis
+            this.dis = !this.dis
           } else {
             console.log('error submit!!');
             this.$notify({
@@ -162,6 +166,20 @@
 
         console.log(index, row);
       },
+      slectCheckbox(row) {
+        if (this.multipleSelection.length === 0) {
+          this.$message({
+            message: '请至少勾选一项，再进行操作',
+            type: 'warning'
+          });
+        } else {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          this.tableData.splice(row);
+        }
+      },
       dialogSubmit() {
         //新增
         // var addArr={
@@ -183,5 +201,13 @@
 <style scoped>
   #app > div {
     margin: 10px 30px;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  .delete {
+    margin-left: 10px;
   }
 </style>

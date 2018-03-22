@@ -2,8 +2,8 @@
   <div>
     <h2>子账户管理</h2><br/>
     <div class="btn">
-      <el-badge :value="12" class="item">
-        <el-button type="primary" size="medium" icon="el-icon-tickets">列表</el-button>
+      <el-badge :value="value" class="item">
+        <el-button type="primary" size="medium" icon="el-icon-tickets" @click="listCount">列表</el-button>
       </el-badge>
 
       <el-button type="success" size="medium" icon="el-icon-plus" @click="dialogFormVisible = true"
@@ -92,12 +92,14 @@
       return {
         // 对话框开始
         dialogFormVisible: false,
+        checked:false,
         form: {
           name: '',
           phone: null,
           sex: '',
           password: '',
         },
+        value:'12',
         formLabelWidth: '15%',
         // 对话框结束
         tableData: [{
@@ -182,7 +184,11 @@
             return false;
           }
         });
-      }
+      },
+      listCount() {
+        this.$message('当前列表共' + this.value + '条数据，已查看');
+        this.value = '';
+      },
     },
 
   }

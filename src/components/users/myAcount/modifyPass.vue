@@ -81,7 +81,7 @@
                             message: '修改密码成功',
                             type: 'success',
                         });
-                        this.dis=!this.dis   //当用户点击提交按钮后，按钮状态变为true，不可用状态
+                        // this.dis=!this.dis   //当用户点击提交按钮后，按钮状态变为true，不可用状态
                     } else {
                         console.log('error submit!!');
                         this.$notify({

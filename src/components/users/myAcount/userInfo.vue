@@ -147,7 +147,7 @@
                             message: '修改成功',
                             type: 'success'
                         });
-                        this.dis=!this.dis
+                        // this.dis=!this.dis
                     } else {
                         console.log('error submit!!');
                         this.$notify({

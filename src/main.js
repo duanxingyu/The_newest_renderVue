@@ -23,11 +23,11 @@ Axios.interceptors.request.use(config => {
     config.headers.common['Authentication-Token'] = store.state.token
   }
   //请求前到请求到数据这段时间用加载动画来代替
-  // let loading = Loading.service({
-  //   fullscreen: true,
-  //   text: '正在拼命加载中...',
-  //   // target:'#app'
-  // });
+  let loading = Loading.service({
+    fullscreen: true,
+    text: '正在拼命加载中...',
+    // target:'#app'
+  });
 
   return config;
 }, error => {

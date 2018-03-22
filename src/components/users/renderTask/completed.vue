@@ -3,13 +3,13 @@
     <h2>已完成任务</h2>
     <span>测试Checked:{{multipleSelection}}</span><br/>
     <div class="btn">
-      <el-badge :value="12" class="item">
-        <el-button type="primary" size="medium" icon="el-icon-tickets">列表</el-button>
+      <el-badge :value="value" class="item">
+        <el-button type="primary" size="medium" icon="el-icon-tickets" @click.once="listCount">列表</el-button>
       </el-badge>
-      <el-button type="primary" size="medium" @click="slectCheckbox" style="margin-left: 15px;"><i
+      <el-button type="primary" size="medium" @click="export2Excel" style="margin-left: 15px;"><i
         class="el-icon-download">&nbsp;导出</i></el-button>
     </div>
-    <el-table :data="tableData5" style="width: 100%;margin-left: 10px"
+    <el-table :data="tableData5" style="width: 100%;margin-left: 10px" ref="multipleTable"
               :default-sort="{prop: 'date', order: 'descending'}"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="35">
@@ -78,7 +78,8 @@
     data() {
       return {
         tableData5: [],
-        multipleSelection: []
+        multipleSelection: [],
+        value:'34',
       }
     },
     created() {
@@ -108,19 +109,33 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      slectCheckbox() {
-        if (this.multipleSelection.length === 0) {
+      listCount() {
+        this.$message('当前列表共' + this.value + '条数据，已查看');
+        this.value = '';
+      },
+      //导出表格
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => v[j]))
+      },
+      export2Excel() {
+        if (this.multipleSelection.length) {
+          import('@/vendor/Export2Excel').then(excel => {
+            const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
+            const filterVal = ['id', 'name', 'number', 'shopId', 'desc']
+            const list = this.multipleSelection
+            const data = this.formatJson(filterVal, list)
+            excel.export_json_to_excel(tHeader, data, 'table')
+            this.$refs.multipleTable.clearSelection()
+          })
+
+        } else {
           this.$message({
             message: '请至少勾选一项，再进行操作',
             type: 'warning'
           });
-        } else {
-          this.$message({
-            message: '已成功选中',
-            type: 'success'
-          });
+
         }
-      }
+      },
     }
   }
 </script>

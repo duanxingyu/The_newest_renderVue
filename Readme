@@ -1,0 +1,2 @@
+1.由于编写管理员界面，先关闭，router/index.js中的router beforeEach 函数以及main.js中的拦截器
+2.批量删除暂未解决
