@@ -7,30 +7,38 @@
                     <el-form-item label="用户名:" prop="username">
                         <el-input v-model="ruleForm.username"></el-input>
                     </el-form-item>
+
                     <el-form-item label="手机号:" prop="phone">
                         <el-input v-model.number="ruleForm.phone"></el-input>
                     </el-form-item>
+
                     <el-form-item label="邮箱:" prop="email">
                         <el-input v-model="ruleForm.email"></el-input>
                     </el-form-item>
+
                     <el-form-item label="姓名:" prop="name">
                         <el-input v-model="ruleForm.name"></el-input>
                     </el-form-item>
+
                     <el-form-item label="性别" prop="sex">
                         <el-select v-model="ruleForm.sex" placeholder="请选择性别">
                             <el-option label="男" value="man"></el-option>
                             <el-option label="女" value="woman"></el-option>
                         </el-select>
                     </el-form-item>
+
                     <el-form-item label="所在地:" prop="address">
                         <el-input v-model="ruleForm.address"></el-input>
                     </el-form-item>
+
                     <el-form-item label="QQ:" prop="qq">
                         <el-input v-model.number="ruleForm.qq"></el-input>
                     </el-form-item>
+
                     <el-form-item label="公司名:" prop="company">
                         <el-input v-model="ruleForm.company"></el-input>
                     </el-form-item>
+
                     <el-form-item label="公司主页:" prop="web">
                         <el-input v-model="ruleForm.web"></el-input>
                     </el-form-item>
@@ -39,6 +47,7 @@
                         <el-button type="primary" @click="submitForm('ruleForm')" :disabled="dis">立即修改</el-button>
                         <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
+
                 </el-form>
             </el-col>
         </el-row>
@@ -80,9 +89,13 @@
                         {
                             min: 3,
                             max: 5,
-                            message: '长度在 3 到 5 个字符',
+                            message: '长度在 3 到 16 个字符',
                             trigger: 'blur'
-                        }
+                        },
+                      {
+                            pattern:/^[0-9a-zA-Z_\u4e00-\u9fa5][a-zA-Z_\u4e00-\u9fa5]+[0-9a-zA-Z_\u4e00-\u9fa5]+$/,
+                            message:'用户名不能全为数字'
+                      }
                     ],
                     phone: [{
                             required: true,

@@ -1,17 +1,20 @@
 <template>
     <el-container>
-        <el-header>
-            <router-link to="/"><img src="../assets/logo_renderg.png" /></router-link>
-            <Header></Header>
-        </el-header>
-        <el-container>
-            <el-aside >
-                <Aside></Aside>
-            </el-aside>
-            <el-main>
-                <Main></Main>
-            </el-main>
-        </el-container>
+
+          <el-header>
+              <router-link to="/"><img src="../assets/logo_renderg.png" /></router-link>
+              <Header></Header>
+          </el-header>
+
+          <el-container>
+              <el-aside style="width: 230px">
+                  <Aside></Aside>
+              </el-aside>
+              <el-main>
+                  <Main></Main>
+              </el-main>
+          </el-container>
+
     </el-container>
 
 </template>
@@ -101,10 +104,10 @@
         /*background-color: #3333;*/
        -moz-box-flex: 1;
         color: #333;
-        margin: 5px 50px 0px 280px;
+        margin: 5px 50px 0px 220px;
         padding:20px 20px 100px 20px;
         height: 90%;
-        width: 85%;
+        width: 88.8%;
         position: absolute;
         overflow-y: scroll;
 

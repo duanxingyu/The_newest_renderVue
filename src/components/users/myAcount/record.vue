@@ -1,6 +1,8 @@
 <template>
     <div>
         <h2>消费记录</h2><br />
+
+      <!--form表单-->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="起始时间">
                 <el-date-picker v-model="value6" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
@@ -31,6 +33,7 @@
             <el-table-column prop="date" label="导出时间" width="240px" sortable>
             </el-table-column>
         </el-table>
+      <!--分页-->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -97,6 +100,7 @@
 
             }
         },
+
       created(){
           this.getData();
       },
@@ -109,15 +113,14 @@
             // this.fetchPapers();
             console.log(`每页 ${size} 条`);
           },
-          // fetchPapers() {
-          //   var recordUrl = this.HOST + '/record';
-          //   this.$axios.get(recordUrl+`/per_page=${this.per_page}`+'&'+`page=${this.page}`)
-          // },
+
           handleCurrentChange(currentPage) {
               this.currentPage=currentPage
             // this.getData();
             console.log(`当前页: ${currentPage}`);
           },
+
+          //通过此方法将分页数据渲染出来
           getData(){
             var recordUrl = this.HOST + '/record';
             this.$axios.get(recordUrl, {

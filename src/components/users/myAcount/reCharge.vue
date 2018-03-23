@@ -2,8 +2,8 @@
   <div>
     <h2>充值</h2><br/>
 
-    <el-button type="success" round @click="dialogFormVisible = true">现金充值</el-button>
-    <el-button type="info" round @click="dialogFormVisible1 = true">代金券充值</el-button>
+    <el-button type="success" @click="dialogFormVisible = true">现金充值</el-button>
+    <el-button type="primary"  @click="dialogFormVisible1 = true">代金券充值</el-button>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>当前账户信息详情</span>
@@ -16,63 +16,24 @@
 
     <el-tabs type="border-card" class="tabsCard">
       <el-tab-pane label="账户余额详情">
-        <el-table
-          :data="tableData"
-          style="width: 100%">
-          <el-table-column
-            prop="date"
-            label="日期"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="地址">
-          </el-table-column>
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="日期" width="180"></el-table-column>
+          <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+          <el-table-column prop="address" label="地址"></el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="普通充值记录">
-        <el-table
-          :data="tableData"
-          style="width: 100%">
-          <el-table-column
-            prop="date"
-            label="日期"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="地址">
-          </el-table-column>
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="日期" width="180"></el-table-column>
+          <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+          <el-table-column prop="address" label="地址"></el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="代金券充值记录">
-        <el-table
-          :data="tableData"
-          style="width: 100%">
-          <el-table-column
-            prop="date"
-            label="日期"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="地址">
-          </el-table-column>
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="日期" width="180"></el-table-column>
+          <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+          <el-table-column prop="address" label="地址"></el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
@@ -145,7 +106,9 @@
         }],
 
         // 对话框开始
+        //激活现金充值对话框
         dialogFormVisible: false,
+        //激活代金券充值对话框
         dialogFormVisible1:false,
 
         rules1:{
@@ -153,9 +116,12 @@
             required:true,
             message:'请输入金额'
           },{
+            type:'number',
+            message:'金额只能为数值'
+          },{
             min:5,
             max:50000,
-            type:'number',
+            // type:'number',
             message:'金额在5~50000元之间'
           }]
         },
@@ -165,7 +131,11 @@
         rules2:{
           crashNumber:[{
             required:true,
-            message:'请输入代金券号码'
+            message:'请输入代金券号码',
+
+          },{
+            message:'代金券号码由数字和英文组成',
+            pattern:/^[a-zA-Z0-9]+$/
           }]
         },
         //支付方式默认支付宝
@@ -173,6 +143,7 @@
       }
     },
     methods:{
+      //现金充值
       dialogSubmit1(form1) {
         this.$refs[form1].validate((valid) => {
           if (valid) {
@@ -193,6 +164,7 @@
           }
         });
       },
+      //代金券充值
       dialogSubmit2(form2) {
         this.$refs[form2].validate((valid) => {
           if (valid) {

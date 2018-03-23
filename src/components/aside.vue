@@ -3,11 +3,11 @@
     <el-row class="tac" :gutter="10">
       <el-col>
         <el-menu default-active="2" :default-openeds="openeds" class="el-menu-vertical-demo" @open="handleOpen"
-                 @close="handleClose">
+                 @close="handleClose" >
           <!--渲染任务-->
           <el-submenu index="1">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-tickets"></i>
               <span>渲染任务</span>
             </template>
             <el-menu-item-group>
@@ -27,7 +27,7 @@
           <!--个人中心-->
           <el-submenu index="2">
             <template slot="title">
-              <i class="el-icon-tickets"></i>
+              <i class="el-icon-bell"></i>
               <span>个人中心</span>
             </template>
             <el-menu-item-group>
@@ -71,7 +71,7 @@
 
           <el-submenu index="3">
             <template slot="title">
-              <i class="el-icon-tickets"></i>
+              <i class="el-icon-phone"></i>
               <span>我的客服</span>
             </template>
             <el-menu-item-group>
@@ -95,6 +95,7 @@
     data() {
       return {
         openeds: ['1', '2'],  //默认展开index为1和2的导航，配合:default="openeds"
+        // isCollapse: true,
       }
     },
     methods: {
@@ -108,6 +109,5 @@
   }
 </script>
 
-<style>
-
+<style scoped>
 </style>

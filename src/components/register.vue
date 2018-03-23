@@ -6,14 +6,15 @@
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-loginForm"
                  style="margin-left: 100px;">
           <h2>用户注册</h2>
+
           <el-form-item label="用户名:" prop="username">
             <el-input v-model="loginForm.username">{{loginForm.username}}</el-input>
           </el-form-item>
 
-          <el-form-item label="手机号:" prop="phone">
-            <el-input v-model="loginForm.phone">{{loginForm.phone}}</el-input>
-            <el-button v-show="show" @click="sendMsg" class="validateCode">点击获取验证码</el-button>
-            <el-button v-show="!show" style="margin-left: 0px"  class="validateCode">{{count}}秒后，重新获取</el-button>
+          <el-form-item label="手机号:"  prop="phone">
+            <el-input v-model.number="loginForm.phone">{{loginForm.phone}}</el-input>
+            <el-button v-show="show" @click="sendMsg()" class="validateCode">点击获取验证码</el-button>
+            <el-button v-show="!show" style="margin-left: 0px" class="validateCode">{{count}}秒后，重新获取</el-button>
           </el-form-item>
 
           <el-form-item label="手机验证码:" prop="validateCode">
@@ -71,12 +72,25 @@
           callback();
         }
       };
+      // 验证手机号
+      var CheckTel = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('请输入手机号码'));
+        } else if (!Number.isInteger(value)) {
+          callback(new Error('手机号码必须是数字'));
+        } else if (value.toString().length != 11) {
+          callback(new Error('手机号码必须是11位'));
+        } else {
+          callback();
+        }
+      };
+
       return {
         loading: false,
-        disabled:true,
-        show:true,
-        count:'',
-        timer:null,
+        disabled: true,
+        show: true,
+        count: '',
+        timer: null,
         loginForm: {
           username: '',
           phone: '',
@@ -99,7 +113,7 @@
           }],
           phone: [{
             required: true,
-            message: '手机号不能为空',
+            validator: CheckTel,
             trigger: 'blur'
           }],
           validateCode: [{
@@ -140,25 +154,50 @@
         this.$refs[formName].resetFields();
       },
       sendMsg() {
-       const TIME_COUNT=180;
-       this.disabled=false;
-       if(!this.timer) {
-         this.count=TIME_COUNT;
-         this.show=false;
-         this.timer=setInterval(()=>{
-           if(this.count>0&&this.count<=TIME_COUNT) {
-             this.count--;
-           }else {
-             this.show=true;
-             clearInterval(this.timer);
-             this.timer=null;
-             this.disabled=true;
+             this.show = false
+             const TIME_COUNT = 180;
+             this.disabled = false;
+             if (!this.timer) {
+               this.count = TIME_COUNT;
+               this.show = false;
+               this.timer = setInterval(() => {
+                 if (this.count > 0 && this.count <= TIME_COUNT) {
+                   this.count--;
+                 } else {
+                   this.show = true;
+                   clearInterval(this.timer);
+                   this.timer = null;
+                   this.disabled = true;
+                 }
+               }, 1000)
+             }
            }
-         },1000)
-       }
       }
-    },
-
+      // sendMsg() {
+      //   this.$refs.loginForm.validateField('phone', function (msg) {
+      //     if (!msg) {
+      //       this.show = false
+      //       const TIME_COUNT = 180;
+      //       this.disabled = false;
+      //       if (!this.timer) {
+      //         this.count = TIME_COUNT;
+      //         this.show = false;
+      //         this.timer = setInterval(() => {
+      //           if (this.count > 0 && this.count <= TIME_COUNT) {
+      //             this.count--;
+      //           } else {
+      //             this.show = true;
+      //             clearInterval(this.timer);
+      //             this.timer = null;
+      //             this.disabled = true;
+      //           }
+      //         }, 1000)
+      //       }
+      //     } else {
+      //       // alert(msg);
+      //     }
+      //   });
+      // }
   }
 </script>
 
@@ -192,7 +231,8 @@
     color: #478aff;
     padding-left: 5px;
   }
-  .validateCode{
+
+  .validateCode {
     float: left;
   }
 
