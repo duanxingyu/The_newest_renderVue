@@ -11,6 +11,7 @@ import Axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/store'
 
+
 // Axios.defaults.auth = {
 //   username: '',
 //   password: ''
@@ -114,7 +115,7 @@ Axios.interceptors.response.use(response => {
 //     'Authentication-Token': store.state.token
 //   },
 // });
-
+// Axios.defaults.withCredentials = true
 Axios.defaults.headers.common['Authentication-Token'] = store.state.token;
 
 // Vue.prototype.$OBJ = obj

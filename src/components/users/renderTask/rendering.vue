@@ -33,7 +33,7 @@
       </el-form-item>
 
       <el-form-item label="提交时间">
-        <el-date-picker v-model="value6" type="daterange" range-separator="至" start-placeholder="开始日期"
+        <el-date-picker  v-model="value6" type="daterange" range-separator="至" start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
@@ -48,46 +48,74 @@
 
     </el-form>
 
-    <el-table :data="tableData5" sort-by="{tableData5.id}" ref="multipleTable" style="width: 100%;margin-left: 10px;"
+    <el-table :data="tableData5" ref="multipleTable" style="width: 100%;margin-left: 10px;"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-                      <span v-for="i in tableData5">
-                        <el-form-item label="商品名称">
-                            <span>{{i.name }}</span>
-                        </el-form-item>
-                        <el-form-item label="所属店铺">
-                            <span>{{i.shop }}</span>
-                        </el-form-item>
-                        <el-form-item label="商品 ID">
-                            <span>{{ i.id }}</span>
-                        </el-form-item>
-                        <el-form-item label="店铺 ID">
-                            <span>{{ i.shopId }}</span>
-                        </el-form-item>
-                        <el-form-item label="商品分类">
-                            <span>{{ i.category }}</span>
-                        </el-form-item>
-                        <el-form-item label="店铺地址">
-                            <span>{{ i.address }}</span>
-                        </el-form-item>
-                        <el-form-item label="商品描述">
-                            <span>{{ i.desc }}</span>
-                        </el-form-item>
-                      </span>
+
+                    <el-form-item label="开始时间">
+                        <span>{{ props.row.StartDate}}</span>
+                    </el-form-item>
+
+                    <el-form-item label="完成时间">
+                        <span>{{ props.row.FinishDate }}</span>
+                    </el-form-item>
+
+                    <el-form-item label="帧范围">
+                        <span>{{ props.row.Frames }}</span>
+                    </el-form-item>
+
+                    <el-form-item label="等待">
+                      <span>{{props.row.QueuedChunks }}</span>
+                    </el-form-item>
+
+                    <el-form-item label="渲染中">
+                      <span>{{props.row.RenderingChunks }}</span>
+                    </el-form-item>
+
+                    <el-form-item label="已完成">
+                      <span>{{props.row.CompletedChunks }}</span>
+                    </el-form-item>
+
+                    <el-form-item label="失败">
+                      <span>{{props.row.FailedChunks }}</span>
+                    </el-form-item>
+
+                    <el-form-item label="总时间">
+                      <span>{{props.row.TotalTaskTime }}</span>
+                    </el-form-item>
+
+                    <el-form-item label="总费用">
+                      <span>{{props.row.amount }}元</span>
+                    </el-form-item>
+
           </el-form>
         </template>
 
       </el-table-column>
+
+
       <el-table-column label="任务号" prop="id" sortable></el-table-column>
-      <el-table-column label="场景" prop="name" sortable></el-table-column>
-      <el-table-column label="项目" prop="name" sortable></el-table-column>
-      <el-table-column label="描述" prop="desc"></el-table-column>
+      <el-table-column label="场景" prop="scene" sortable></el-table-column>
+      <el-table-column label="项目" prop="project_name" sortable></el-table-column>
+      <el-table-column label="提交时间" prop="SubmitDate" sortable></el-table-column>
+      <el-table-column label="状态" prop="Status" sortable></el-table-column>
+
+
     </el-table>
 
-
+    <el-pagination @size-change="sizeChange" @current-change="currentChange"
+                   :current-page.sync="currentPage" :page-sizes="[5,10,20,40,80]"
+                   :page-size="pageSize"
+                   layout="total, sizes, prev, pager, next, jumper"
+                   :total="pages.total"
+                    >
+      <!--<span>第{{currentPage}}/{{pages.pages}}</span>-->
+    </el-pagination>
+    <!--:page-size="this.pageSize"-->
+    <!--layout="total, sizes, prev, pager, next, jumper"-->
   </div>
 </template>
 
@@ -130,24 +158,16 @@
         //data数据
         tableData5: [],
         multipleSelection: [],
-
+        currentPage: 1,
+        pageSize: 10,
+        pages:{}
+        // per_page:null,
+        // page:null
       }
     },
     //通过vue中created钩子函数，将api数据渲染出来
     created() {
-      var url = this.HOST + "/info";
-      // console.log(localStorage.token);
-      this.$axios.get(url).then(res => {
-        // console.log(res.data)
-        this.tableData5 = res.data
-        if (store.state.token) {
-          this.$router.push('/rendering');
-        } else {
-          this.$router.replace('/login');
-        }
-      }).catch(error => {
-        console.log(error)
-      });
+      this.getData();
 
     },
     methods: {
@@ -157,19 +177,51 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      sizeChange(size) {
+        this.pageSize = size
+        this.getData();
+        console.log(`每页 ${size} 条`);
+      },
+
+      currentChange(currentPage) {
+        this.currentPage = currentPage
+        this.getData();
+        console.log(`当前页: ${currentPage}`);
+      },
+      getData(page,per_page){
+        var url = this.HOST + "/job";
+        this.$axios.get(url,{
+          params:{
+            page:this.currentPage,
+            per_page:this.pageSize
+          }
+
+        }).then(res => {
+          // console.log(res.data);
+          this.tableData5 = res.data.jobs;
+          this.pages=res.data;
+          if (store.state.token) {
+            this.$router.push('/rendering');
+          } else {
+            this.$router.replace('/login');
+          }
+        }).catch(error => {
+          console.log(error)
+        });
+      },
       //导出表格
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => v[j]))
       },
       export2Excel() {
         if (this.multipleSelection.length) {
-          import('@/vendor/Export2Excel').then(excel => {
-            const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
-            const filterVal = ['id', 'name', 'number', 'shopId', 'desc']
-            const list = this.multipleSelection
-            const data = this.formatJson(filterVal, list)
-            excel.export_json_to_excel(tHeader, data, 'table')
-            this.$refs.multipleTable.clearSelection()
+          require.ensure([], () => {
+            const { export_json_to_excel } = require('../../../vendor/Export2Excel');
+            const tHeader = ['任务号', '场景', '项目', '提交时间', '状态','开始时间','完成时间','帧范围','等待','渲染中','已完成','失败','总时间','总费用']; //对应表格输出的title
+            const filterVal = ['id', 'scene', 'project_name', 'SubmitDate', 'Status','StartDate','FinishDate','Frames','QueuedChunks','RenderingChunks','CompletedChunks','FailedChunks','TotalTaskTime','amount']; // 对应表格输出的数据
+            const list = this.multipleSelection;
+            const data = this.formatJson(filterVal, list);
+            export_json_to_excel(tHeader, data, '正在渲染任务'); //对应下载文件的名字
           })
 
         } else {

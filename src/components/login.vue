@@ -97,6 +97,7 @@
               this.loading = false
               this.loginBtn = "登录"
               this.$message.error('账号或密码错误');
+              //如果登录失败，加载动画停止
               let loading = Loading.service({});
               loading.close();
               console.log(error);

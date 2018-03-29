@@ -11,10 +11,10 @@
             <el-input v-model="loginForm.username">{{loginForm.username}}</el-input>
           </el-form-item>
 
-          <el-form-item label="手机号:"  prop="phone">
+          <el-form-item label="手机号:" prop="phone">
             <el-input v-model.number="loginForm.phone">{{loginForm.phone}}</el-input>
-            <el-button v-show="show" @click="sendMsg()" class="validateCode">点击获取验证码</el-button>
-            <el-button v-show="!show" style="margin-left: 0px" class="validateCode">{{count}}秒后，重新获取</el-button>
+            <el-button class="validateCode" @click="sendMsg" type="primary" :disabled="isDisabled">{{buttonName}}
+            </el-button>
           </el-form-item>
 
           <el-form-item label="手机验证码:" prop="validateCode">
@@ -88,9 +88,9 @@
       return {
         loading: false,
         disabled: true,
-        show: true,
-        count: '',
-        timer: null,
+        buttonName: "发送短信",
+        isDisabled: false,
+        time: 120,
         loginForm: {
           username: '',
           phone: '',
@@ -154,50 +154,30 @@
         this.$refs[formName].resetFields();
       },
       sendMsg() {
-             this.show = false
-             const TIME_COUNT = 180;
-             this.disabled = false;
-             if (!this.timer) {
-               this.count = TIME_COUNT;
-               this.show = false;
-               this.timer = setInterval(() => {
-                 if (this.count > 0 && this.count <= TIME_COUNT) {
-                   this.count--;
-                 } else {
-                   this.show = true;
-                   clearInterval(this.timer);
-                   this.timer = null;
-                   this.disabled = true;
-                 }
-               }, 1000)
-             }
-           }
+
+        // alert(this.rules.phone);
+        this.$refs.loginForm.validateField('phone', valid => {
+          if (valid !== '') {
+            this.rules.phone;
+          } else {
+            let me = this;
+            me.isDisabled = true;
+            let interval = window.setInterval(function () {
+              me.buttonName = me.time + '后重新发送';
+              --me.time;
+              if (me.time < 0) {
+                me.buttonName = "重新发送";
+                me.time = 120;
+                me.isDisabled = false;
+                window.clearInterval(interval);
+              }
+            }, 1000);
+            this.disabled = false
+          }
+        });
       }
-      // sendMsg() {
-      //   this.$refs.loginForm.validateField('phone', function (msg) {
-      //     if (!msg) {
-      //       this.show = false
-      //       const TIME_COUNT = 180;
-      //       this.disabled = false;
-      //       if (!this.timer) {
-      //         this.count = TIME_COUNT;
-      //         this.show = false;
-      //         this.timer = setInterval(() => {
-      //           if (this.count > 0 && this.count <= TIME_COUNT) {
-      //             this.count--;
-      //           } else {
-      //             this.show = true;
-      //             clearInterval(this.timer);
-      //             this.timer = null;
-      //             this.disabled = true;
-      //           }
-      //         }, 1000)
-      //       }
-      //     } else {
-      //       // alert(msg);
-      //     }
-      //   });
-      // }
+    }
+
   }
 </script>
 

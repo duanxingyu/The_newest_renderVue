@@ -8,9 +8,10 @@
           <h2>忘记密码</h2>
 
           <el-form-item label="手机号:" prop="phone">
-            <el-input v-model="loginForm.phone" >{{loginForm.phone}}</el-input>
-            <el-button v-show="show" @click="sendMsg" class="validateCode">点击获取验证码</el-button>
-            <el-button v-show="!show" style="margin-left: 0px"  class="validateCode">{{count}}秒后，重新获取</el-button>
+            <el-input v-model.number="loginForm.phone" >{{loginForm.phone}}</el-input>
+            <!--<el-button v-show="show" @click="sendMsg" class="validateCode">点击获取验证码</el-button>-->
+            <!--<el-button v-show="!show" style="margin-left: 0px"  class="validateCode">{{count}}秒后，重新获取</el-button>-->
+            <el-button class="validateCode"  @click="sendMsg" type="primary" :disabled="isDisabled">{{buttonName}}</el-button>
           </el-form-item>
 
           <el-form-item label="手机验证码:" prop="validateCode">
@@ -49,6 +50,7 @@
   export default {
     name: "forgetPass",
     data() {
+
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -68,12 +70,27 @@
           callback();
         }
       };
+      // 验证手机号
+      var CheckTel = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('请输入手机号码'));
+        } else if (!Number.isInteger(value)) {
+          callback(new Error('手机号码必须是数字'));
+        } else if (value.toString().length != 11) {
+          callback(new Error('手机号码必须是11位'));
+        } else {
+          callback();
+        }
+      };
       return {
+        buttonName: "发送短信",
+        isDisabled: false,
+        time: 120,
         loading: false,
         disabled:true,
-        show:true,
-        count:'',
-        timer:null,
+        // show:true,
+        // count:'',
+        // timer:null,
         loginForm: {
           username: '',
           phone: '',
@@ -96,7 +113,7 @@
           }],
           phone: [{
             required: true,
-            message: '手机号不能为空',
+            validator:CheckTel,
             trigger: 'blur'
           }],
           validateCode: [{
@@ -137,25 +154,46 @@
         this.$refs[formName].resetFields();
       },
       sendMsg() {
+        // alert(this.rules.phone);
+        this.$refs.loginForm.validateField('phone',valid=>{
+          if (valid!=='') {
+            this.rules.phone;
+          }else {
+            let me = this;
+            me.isDisabled = true;
+            let interval = window.setInterval(function () {
+              me.buttonName = me.time + '后重新发送';
+              --me.time;
+              if (me.time < 0) {
+                me.buttonName = "重新发送";
+                me.time = 120;
+                me.isDisabled = false;
+                window.clearInterval(interval);
+              }
+            }, 1000);
+            this.disabled = false
+          }
+        });
 
-
-        const TIME_COUNT=180;
-        this.disabled=false;
-        if(!this.timer) {
-          this.count=TIME_COUNT;
-          this.show=false;
-          this.timer=setInterval(()=>{
-            if(this.count>0&&this.count<=TIME_COUNT) {
-              this.count--;
-            }else {
-              this.show=true;
-              clearInterval(this.timer);
-              this.timer=null;
-              this.disabled=true;
-            }
-          },1000)
-        }
       }
+        // sendMsg() {
+      //   const TIME_COUNT=180;
+      //   this.disabled=false;
+      //   if(!this.timer) {
+      //     this.count=TIME_COUNT;
+      //     this.show=false;
+      //     this.timer=setInterval(()=>{
+      //       if(this.count>0&&this.count<=TIME_COUNT) {
+      //         this.count--;
+      //       }else {
+      //         this.show=true;
+      //         clearInterval(this.timer);
+      //         this.timer=null;
+      //         this.disabled=true;
+      //       }
+      //     },1000)
+      //   }
+      // }
     },
 
   }

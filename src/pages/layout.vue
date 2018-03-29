@@ -7,7 +7,7 @@
           </el-header>
 
           <el-container>
-              <el-aside style="width: 230px">
+              <el-aside style="width: 220px">
                   <Aside></Aside>
               </el-aside>
               <el-main>
@@ -89,7 +89,7 @@
 
     .el-aside {
         /*background-color: #E9EEF3;*/
-        height: 90%;
+        height: 100%;
         /*width: 20%;*/
         padding-left: 10px;
         padding-bottom: 200px;

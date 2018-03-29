@@ -30,78 +30,78 @@ const routes = [{
   },
   children: [{
     path: 'rendering',
-    name:'正在渲染任务',
+    name: '正在渲染任务',
     component: Rendering
   },
     {
       path: 'completed',
-      name:'已完成任务',
+      name: '已完成任务',
       component: Completed
     }, {
       path: 'userInfo',
-      name:'用户资料',
+      name: '用户资料',
       component: UserInfo
     }, {
       path: 'modifyPass',
-      name:'修改密码',
+      name: '修改密码',
       component: ModifyPass
     }, {
       path: 'childAcount',
-      name:'子账户管理',
+      name: '子账户管理',
       component: ChildAcount
     }, {
       path: 'record',
-      name:'消费记录',
+      name: '消费记录',
       component: Record
     }, {
       path: 'crash',
-      name:'代金券',
+      name: '代金券',
       component: Crash
     }, {
       path: 'reCharge',
-      name:'充值',
+      name: '充值',
       component: ReCharge
     }, {
       path: 'setting',
-      name:'通知设置',
+      name: '通知设置',
       component: Setting
     }
   ]
 
 }, {
-  path: '/login',
-  component: Login
-}, {
-  path: '/register',
-  component: Register
-}, {
-  path: '/forgetPass',
-  component: ForgetPass
-},{
-  path:'/allJobs',
-  component:(resolve)=>require(['../components/admins/account/allUsers.vue'],resolve)
-},{
-  path:'/customer',
-  component:(resolve)=>require(['../components/admins/account/customer.vue'],resolve)
-},{
-  path:'/renderManger',
-  component:(resolve)=>require(['../components/admins/account/renderManger.vue'],resolve)
-},{
-  path:'/salesMan',
-  component:(resolve)=>require(['../components/admins/account/salesMan.vue'],resolve)
-},{
-  path:'/visitor',
-  component:(resolve)=>require(['../components/admins/account/visitor.vue'],resolve)
-},{
-  path:'/roles',
-  component:(resolve)=>require(['../components/admins/account/roles.vue'],resolve)
-},{
-  path:'/deadlineUsers',
-  component:(resolve)=>require(['../components/admins/account/deadlineUsers.vue'],resolve)
-},{
-  path:'/setGroup',
-  component:(resolve)=>require(['../components/admins/account/setGroup.vue'],resolve)
-}]
+      path: '/login',
+      component: Login
+    }, {
+      path: '/register',
+      component: Register
+    }, {
+      path: '/forgetPass',
+      component: ForgetPass
+    }, {
+      path: '/allJobs',
+      component: (resolve) => require(['../components/admins/account/allUsers.vue'], resolve)
+    }, {
+      path: '/customer',
+      component: (resolve) => require(['../components/admins/account/customer.vue'], resolve)
+    }, {
+      path: '/renderManger',
+      component: (resolve) => require(['../components/admins/account/renderManger.vue'], resolve)
+    }, {
+      path: '/salesMan',
+      component: (resolve) => require(['../components/admins/account/salesMan.vue'], resolve)
+    }, {
+      path: '/visitor',
+      component: (resolve) => require(['../components/admins/account/visitor.vue'], resolve)
+    }, {
+      path: '/roles',
+      component: (resolve) => require(['../components/admins/account/roles.vue'], resolve)
+    }, {
+      path: '/deadlineUsers',
+      component: (resolve) => require(['../components/admins/account/deadlineUsers.vue'], resolve)
+    }, {
+      path: '/setGroup',
+      component: (resolve) => require(['../components/admins/account/setGroup.vue'], resolve)
+    }]
 
 
 // 页面刷新时，重新赋值token
