@@ -21,26 +21,26 @@
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="任务号">
-        <el-input v-model="formInline.user" placeholder="任务号"></el-input>
+        <el-input v-model="formInline.id" placeholder="任务号"></el-input>
       </el-form-item>
 
       <el-form-item label="场景">
-        <el-input v-model="formInline.user" placeholder="场景"></el-input>
+        <el-input v-model="formInline.scene" placeholder="场景"></el-input>
       </el-form-item>
 
       <el-form-item label="项目">
-        <el-input v-model="formInline.user" placeholder="项目"></el-input>
+        <el-input v-model="formInline.project_name" placeholder="项目"></el-input>
       </el-form-item>
 
       <el-form-item label="提交时间">
-        <el-date-picker  v-model="value6" type="daterange" range-separator="至" start-placeholder="开始日期"
+        <el-date-picker  v-model="SubmitDate" type="daterange" range-separator="至" start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
 
-      <el-form-item>
-        <el-checkbox v-model="checked">筛选失败帧</el-checkbox>
-      </el-form-item>
+      <!--<el-form-item>-->
+        <!--<el-checkbox v-model="checked">筛选失败帧</el-checkbox>-->
+      <!--</el-form-item>-->
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -110,9 +110,7 @@
                    :current-page.sync="currentPage" :page-sizes="[5,10,20,40,80]"
                    :page-size="pageSize"
                    layout="total, sizes, prev, pager, next, jumper"
-                   :total="pages.total"
-                    >
-      <!--<span>第{{currentPage}}/{{pages.pages}}</span>-->
+                   :total="pages.total">
     </el-pagination>
     <!--:page-size="this.pageSize"-->
     <!--layout="total, sizes, prev, pager, next, jumper"-->
@@ -153,14 +151,14 @@
         checked: false,
         // loading:true,
 
-        value6: '',
+        SubmitDate: '',
         value7: '',
         //data数据
         tableData5: [],
         multipleSelection: [],
         currentPage: 1,
         pageSize: 10,
-        pages:{}
+        pages:{},
         // per_page:null,
         // page:null
       }
@@ -168,7 +166,7 @@
     //通过vue中created钩子函数，将api数据渲染出来
     created() {
       this.getData();
-
+      // this.postData();
     },
     methods: {
       onSubmit() {
@@ -188,17 +186,18 @@
         this.getData();
         console.log(`当前页: ${currentPage}`);
       },
-      getData(page,per_page){
+      getData(){
         var url = this.HOST + "/job";
         this.$axios.get(url,{
           params:{
             page:this.currentPage,
-            per_page:this.pageSize
+            per_page:this.pageSize,
+            status:1
           }
 
         }).then(res => {
-          // console.log(res.data);
-          this.tableData5 = res.data.jobs;
+          console.log(res.data);
+          this.tableData5 = res.data.data;
           this.pages=res.data;
           if (store.state.token) {
             this.$router.push('/rendering');
@@ -209,6 +208,14 @@
           console.log(error)
         });
       },
+      // postData(){
+      //   var url = this.HOST + "/job";
+      //   this.$axios.post(url,{
+      //       status:1
+      //   }).then(rs=>{
+      //     console.log(rs);
+      //   })
+      // },
       //导出表格
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => v[j]))

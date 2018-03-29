@@ -46,7 +46,7 @@ Axios.interceptors.response.use(response => {
   // 对响应数据做点什么
   let loading = Loading.service({});
   loading.close();
-  console.log(response.data)
+  // console.log(response.data)
   return response;
 }, error => {
   // 对响应错误做点什么
