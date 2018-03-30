@@ -10,6 +10,31 @@
         class="el-icon-download">&nbsp;导出</i></el-button>
     </div>
 
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form-item label="任务号">
+        <el-input v-model="formInline.id"  placeholder="任务号"></el-input>
+      </el-form-item>
+
+      <el-form-item label="场景">
+        <el-input v-model="formInline.scene"  placeholder="场景"></el-input>
+      </el-form-item>
+
+      <el-form-item label="项目">
+        <el-input v-model="formInline.project_name" placeholder="项目"></el-input>
+      </el-form-item>
+
+      <el-form-item label="提交时间">
+        <el-date-picker v-model="formInline.submit_date" type="daterange" range-separator="至" start-placeholder="开始日期"
+                        end-placeholder="结束日期"  format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary"  @click="onSubmit">查询</el-button>
+      </el-form-item>
+
+    </el-form>
+
     <el-table :data="tableData5" ref="multipleTable" style="width: 100%;margin-left: 10px;"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
@@ -25,9 +50,15 @@
               <span>{{ props.row.FinishDate }}</span>
             </el-form-item>
 
-            <el-form-item label="帧范围" :title="props.row.Frames" style="overflow: hidden;white-space: nowrap">
-              <span>{{ props.row.Frames }}</span>
-            </el-form-item>
+            <el-tooltip class="item" effect="light" placement="bottom-start">
+              <div slot="content"
+                   style="overflow:hidden;white-space: normal;word-wrap: break-word;-ms-word-break: break-all;word-break: break-all;">
+                {{props.row.Frames}}
+              </div>
+              <el-form-item label="帧范围" style="overflow: hidden;white-space: nowrap">
+                <span>{{ props.row.Frames }}</span>
+              </el-form-item>
+            </el-tooltip>
 
             <el-form-item label="等待">
               <span>{{props.row.QueuedChunks }}</span>
@@ -101,6 +132,14 @@
     name: 'completed',
     data() {
       return {
+        formInline: {
+          id: null,
+          scene: '',
+          project_name: '',
+          submit_date: [null,null] ,
+
+
+        },
         tableData5: [],
         multipleSelection: [],
         currentPage: 1,
@@ -112,6 +151,11 @@
       this.getData();
     },
     methods: {
+      onSubmit() {
+        console.log('submit!');
+        console.log(this.formInline.submit_date);
+        this.getData();
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
@@ -135,7 +179,11 @@
           params:{
             page:this.currentPage,
             per_page:this.pageSize,
-            status:4
+            status:4,
+            job_id: this.formInline.id,
+            scene: this.formInline.scene,
+            project_name: this.formInline.project_name,
+            submit_date: this.formInline.submit_date
           }
         }).then(res => {
           console.log(res.data)

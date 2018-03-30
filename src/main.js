@@ -117,6 +117,7 @@ Axios.interceptors.response.use(response => {
 // });
 // Axios.defaults.withCredentials = true
 Axios.defaults.headers.common['Authentication-Token'] = store.state.token;
+Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 // Vue.prototype.$OBJ = obj
 

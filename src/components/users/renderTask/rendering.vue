@@ -11,13 +11,13 @@
       <el-button-group style="margin-left: 20px;">
         <el-button type="primary" size="medium" @click="export2Excel"><i class="el-icon-download">&nbsp;导出</i>
         </el-button>
-        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-delete">&nbsp;移除</i>
+        <el-button type="primary" size="medium" @click="removeCheckbox"><i class="el-icon-delete">&nbsp;移除</i>
         </el-button>
-        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-refresh">&nbsp;恢复</i>
+        <el-button type="primary" size="medium" @click="resumeCheckbox"><i class="el-icon-refresh">&nbsp;恢复</i>
         </el-button>
-        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-time">&nbsp;全速</i></el-button>
-        <el-button type="primary" size="medium" @click="slectCheckbox"><i
-          class="el-icon-caret-left el-icon-caret-right">&nbsp;停止</i>
+        <el-button type="primary" size="medium" @click="speedupCheckbox"><i class="el-icon-time">&nbsp;全速</i></el-button>
+        <el-button type="primary" size="medium" @click="suspendCheckbox"><i
+          class="el-icon-caret-left el-icon-caret-right">&nbsp;暂停</i>
         </el-button>
       </el-button-group>
 
@@ -25,11 +25,11 @@
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="任务号">
-        <el-input v-model="formInline.id" placeholder="任务号"></el-input>
+        <el-input v-model="formInline.id"  placeholder="任务号"></el-input>
       </el-form-item>
 
       <el-form-item label="场景">
-        <el-input v-model="formInline.scene" placeholder="场景"></el-input>
+        <el-input v-model="formInline.scene"  placeholder="场景"></el-input>
       </el-form-item>
 
       <el-form-item label="项目">
@@ -42,12 +42,8 @@
         </el-date-picker>
       </el-form-item>
 
-      <!--<el-form-item>-->
-      <!--<el-checkbox v-model="checked">筛选失败帧</el-checkbox>-->
-      <!--</el-form-item>-->
-
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary"  @click="onSubmit">查询</el-button>
       </el-form-item>
 
     </el-form>
@@ -69,7 +65,7 @@
 
             <el-tooltip class="item" effect="light" placement="bottom-start">
               <div slot="content"
-                   style="white-space: normal;word-wrap: break-word;-ms-word-break: break-all;word-break: break-all;">
+                   style="overflow:hidden;white-space: normal;word-wrap: break-word;-ms-word-break: break-all;word-break: break-all;">
                 {{props.row.Frames}}
               </div>
               <el-form-item label="帧范围" style="overflow: hidden;white-space: nowrap">
@@ -156,7 +152,7 @@
           id: null,
           scene: '',
           project_name: '',
-          submit_date: [null,null] ,
+          submit_date: '' ,
 
         },
         //单选框
@@ -181,10 +177,12 @@
       // this.postData();
     },
     methods: {
+
       onSubmit() {
-        console.log('submit!');
-        console.log(this.formInline.submit_date);
+
+        // console.log(this.formInline.submit_date);
         this.getData();
+
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -201,6 +199,13 @@
         console.log(`当前页: ${currentPage}`);
       },
       getData() {
+        console.log('submit!');
+        var arr=this.formInline.submit_date;
+        let multis = [];
+        for (var i=0;i<arr.length;i++){
+          multis.push(arr[i]);
+          // console.log(multis[0],multis[1])
+        }
         var url = this.HOST + "/job";
         this.$axios.get(url, {
           params: {
@@ -210,7 +215,7 @@
             job_id: this.formInline.id,
             scene: this.formInline.scene,
             project_name: this.formInline.project_name,
-            submit_date: this.formInline.submit_date
+            submit_date: multis,
           }
 
         }).then(res => {
@@ -226,17 +231,94 @@
           console.log(error)
         });
       },
-      // postData(){
-      //   var url = this.HOST + "/job";
-      //   this.$axios.post(url,{
-      //       job_id:this.formInline.job_id,
-      //       scene:this.formInline.scene,
-      //       project_name:this.formInline.project_name,
-      //       SubmitDate:this.formInline.SubmitDate
-      //   }).then(rs=>{
-      //     console.log(rs);
-      //   })
-      // },
+      //移除任务
+      removeData(){
+        var arr=this.multipleSelection;
+        let multis = [];
+        for (var i=0;i<arr.length;i++){
+          multis.push(arr[i].id);
+          console.log(multis)
+        }
+        var url = this.HOST + "/job";
+        this.$axios.post(url,{
+          operate:'remove',
+          job_ids:multis
+        }).then(rs=>{
+          if(multis.length!==null){
+            this.$message.success("操作成功")
+          }else{
+            this.$message.error("操作失败")
+          }
+          console.log(rs);
+        })
+        this.$refs.multipleTable.clearSelection();
+      },
+      //恢复任务
+      resumeData(){
+        var arr=this.multipleSelection;
+        let multis = [];
+        for (var i=0;i<arr.length;i++){
+          multis.push(arr[i].id);
+          console.log(multis)
+        }
+        var url = this.HOST + "/job";
+        this.$axios.post(url,{
+          operate:'resume',
+          job_ids:multis
+        }).then(rs=>{
+          if(multis.length!==null){
+            this.$message.success("操作成功")
+          }else{
+            this.$message.error("操作失败")
+          }
+          console.log(rs);
+        })
+        this.$refs.multipleTable.clearSelection();
+      },
+      //全速
+      speedupData(){
+        var arr=this.multipleSelection;
+        let multis = [];
+        for (var i=0;i<arr.length;i++){
+          multis.push(arr[i].id);
+          console.log(multis)
+        }
+        var url = this.HOST + "/job";
+        this.$axios.post(url,{
+          operate:'speedup',
+          job_ids:multis
+        }).then(rs=>{
+          if(multis.length!==null){
+            this.$message.success("操作成功")
+          }else{
+            this.$message.error("操作失败")
+          }
+          console.log(rs);
+        })
+        this.$refs.multipleTable.clearSelection();
+      },
+      //暂停任务
+      suspendData(){
+        var arr=this.multipleSelection;
+        let multis = [];
+        for (var i=0;i<arr.length;i++){
+          multis.push(arr[i].id);
+          console.log(multis)
+        }
+        var url = this.HOST + "/job";
+        this.$axios.post(url,{
+          operate:'suspend',
+          job_ids:multis
+        }).then(rs=>{
+          if(multis.length!==null){
+            this.$message.success("操作成功")
+          }else{
+            this.$message.error("操作失败")
+          }
+          console.log(rs);
+        })
+        this.$refs.multipleTable.clearSelection();
+      },
 
       //导出表格
       formatJson(filterVal, jsonData) {
@@ -261,14 +343,48 @@
 
         }
       },
-      //任务勾选操作
-      slectCheckbox() {
+      //移除选择框操作
+      removeCheckbox() {
         if (this.multipleSelection.length === 0) {
           this.$message({
             message: '请至少勾选一项，再进行操作',
             type: 'warning'
           });
         } else {
+          this.removeData();
+        }
+      },
+      //恢复选择框
+      resumeCheckbox() {
+        if (this.multipleSelection.length === 0) {
+          this.$message({
+            message: '请至少勾选一项，再进行操作',
+            type: 'warning'
+          });
+        } else {
+          this.resumeData();
+        }
+      },
+      //全速选择框
+      speedupCheckbox() {
+        if (this.multipleSelection.length === 0) {
+          this.$message({
+            message: '请至少勾选一项，再进行操作',
+            type: 'warning'
+          });
+        } else {
+          this.speedupData();
+        }
+      },
+      // 暂停选择框
+      suspendCheckbox() {
+        if (this.multipleSelection.length === 0) {
+          this.$message({
+            message: '请至少勾选一项，再进行操作',
+            type: 'warning'
+          });
+        } else {
+          this.suspendData();
           this.$message({
             message: '已成功选中',
             type: 'success'

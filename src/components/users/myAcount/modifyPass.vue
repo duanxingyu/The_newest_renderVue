@@ -76,6 +76,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if(valid) {
+                      this.postData();
                         this.$notify({
                             title: '成功',
                             message: '修改密码成功',
@@ -95,7 +96,23 @@
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
-            }
+            },
+          postData(){
+              var url=this.HOST+'/user_profile'
+            this.$axios.post(url, {
+              operate: "password",
+              user_data: {
+                user_id: null,
+                old_password: this.ruleForm2.oldPass,
+                new_password: this.ruleForm2.pass,
+              }
+            }).then(res => {
+              this.$router.push('/login');
+              console.log(res);
+            }).catch(error=>{
+              console.log(error);
+            })
+          }
         }
     }
 </script>
