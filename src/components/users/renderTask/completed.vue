@@ -3,10 +3,10 @@
     <h2>已完成任务</h2>
     <span>测试Checked:{{multipleSelection}}</span><br/>
     <div class="btn">
-      <el-badge :value="value" class="item">
-        <el-button type="primary" size="medium" icon="el-icon-tickets" @click.once="listCount">列表</el-button>
+      <el-badge :value="pages.total" :max="99" :is-dot="true" class="item">
+        <el-button type="primary" size="medium" icon="el-icon-tickets" @click="listCount">列表</el-button>
       </el-badge>
-      <el-button type="primary" size="medium" @click="export2Excel" style="margin-left: 15px;"><i
+      <el-button type="primary" size="medium" @click="export2Excel" style="margin-left: 20px;"><i
         class="el-icon-download">&nbsp;导出</i></el-button>
     </div>
 
@@ -25,7 +25,7 @@
               <span>{{ props.row.FinishDate }}</span>
             </el-form-item>
 
-            <el-form-item label="帧范围">
+            <el-form-item label="帧范围" :title="props.row.Frames" style="overflow: hidden;white-space: nowrap">
               <span>{{ props.row.Frames }}</span>
             </el-form-item>
 
@@ -101,7 +101,6 @@
     name: 'completed',
     data() {
       return {
-        value:'34',
         tableData5: [],
         multipleSelection: [],
         currentPage: 1,
@@ -117,8 +116,7 @@
         this.multipleSelection = val;
       },
       listCount() {
-        this.$message('当前列表共' + this.value + '条数据，已查看');
-        this.value = '';
+        this.$message('当前列表共' + this.pages.total + '条数据，已查看');
       },
       sizeChange(size) {
         this.pageSize = size

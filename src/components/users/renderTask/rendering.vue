@@ -4,16 +4,20 @@
     <span>测试Checked:{{multipleSelection}}</span><br/>
     <div class="btn">
 
-      <el-badge :value="this.value" class="item">
-        <el-button type="primary" size="medium" icon="el-icon-tickets" @click.once="listCount">列表</el-button>
+      <el-badge :value="pages.total" :max="99" :is-dot="true" class="item">
+        <el-button type="primary" size="medium" icon="el-icon-tickets" @click="listCount">列表</el-button>
       </el-badge>
 
-      <el-button-group style="margin-left: 15px;">
-        <el-button type="primary" size="medium" @click="export2Excel"><i class="el-icon-download">&nbsp;导出</i></el-button>
-        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-delete">&nbsp;移除</i></el-button>
-        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-refresh">&nbsp;恢复</i></el-button>
+      <el-button-group style="margin-left: 20px;">
+        <el-button type="primary" size="medium" @click="export2Excel"><i class="el-icon-download">&nbsp;导出</i>
+        </el-button>
+        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-delete">&nbsp;移除</i>
+        </el-button>
+        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-refresh">&nbsp;恢复</i>
+        </el-button>
         <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-time">&nbsp;全速</i></el-button>
-        <el-button type="primary" size="medium" @click="slectCheckbox"><i class="el-icon-caret-left el-icon-caret-right">&nbsp;停止</i>
+        <el-button type="primary" size="medium" @click="slectCheckbox"><i
+          class="el-icon-caret-left el-icon-caret-right">&nbsp;停止</i>
         </el-button>
       </el-button-group>
 
@@ -33,13 +37,13 @@
       </el-form-item>
 
       <el-form-item label="提交时间">
-        <el-date-picker  v-model="SubmitDate" type="daterange" range-separator="至" start-placeholder="开始日期"
-                        end-placeholder="结束日期">
+        <el-date-picker v-model="formInline.submit_date" type="daterange" range-separator="至" start-placeholder="开始日期"
+                        end-placeholder="结束日期"  format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
 
       <!--<el-form-item>-->
-        <!--<el-checkbox v-model="checked">筛选失败帧</el-checkbox>-->
+      <!--<el-checkbox v-model="checked">筛选失败帧</el-checkbox>-->
       <!--</el-form-item>-->
 
       <el-form-item>
@@ -51,45 +55,51 @@
     <el-table :data="tableData5" ref="multipleTable" style="width: 100%;margin-left: 10px;"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="35" v-model="multipleSelection"></el-table-column>
-      <el-table-column type="expand">
+      <el-table-column type="expand" show-overflow-tooltip>
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
 
-                    <el-form-item label="开始时间">
-                        <span>{{ props.row.StartDate}}</span>
-                    </el-form-item>
+            <el-form-item label="开始时间">
+              <span>{{ props.row.StartDate}}</span>
+            </el-form-item>
 
-                    <el-form-item label="完成时间">
-                        <span>{{ props.row.FinishDate }}</span>
-                    </el-form-item>
+            <el-form-item label="完成时间">
+              <span>{{ props.row.FinishDate }}</span>
+            </el-form-item>
 
-                    <el-form-item label="帧范围">
-                        <span>{{ props.row.Frames }}</span>
-                    </el-form-item>
+            <el-tooltip class="item" effect="light" placement="bottom-start">
+              <div slot="content"
+                   style="white-space: normal;word-wrap: break-word;-ms-word-break: break-all;word-break: break-all;">
+                {{props.row.Frames}}
+              </div>
+              <el-form-item label="帧范围" style="overflow: hidden;white-space: nowrap">
+                <span>{{ props.row.Frames }}</span>
+              </el-form-item>
+            </el-tooltip>
 
-                    <el-form-item label="等待">
-                      <span>{{props.row.QueuedChunks }}</span>
-                    </el-form-item>
+            <el-form-item label="等待">
+              <span>{{props.row.QueuedChunks }}</span>
+            </el-form-item>
 
-                    <el-form-item label="渲染中">
-                      <span>{{props.row.RenderingChunks }}</span>
-                    </el-form-item>
+            <el-form-item label="渲染中">
+              <span>{{props.row.RenderingChunks }}</span>
+            </el-form-item>
 
-                    <el-form-item label="已完成">
-                      <span>{{props.row.CompletedChunks }}</span>
-                    </el-form-item>
+            <el-form-item label="已完成">
+              <span>{{props.row.CompletedChunks }}</span>
+            </el-form-item>
 
-                    <el-form-item label="失败">
-                      <span>{{props.row.FailedChunks }}</span>
-                    </el-form-item>
+            <el-form-item label="失败">
+              <span>{{props.row.FailedChunks }}</span>
+            </el-form-item>
 
-                    <el-form-item label="总时间">
-                      <span>{{props.row.TotalTaskTime }}</span>
-                    </el-form-item>
+            <el-form-item label="总时间">
+              <span>{{props.row.TotalTaskTime }}</span>
+            </el-form-item>
 
-                    <el-form-item label="总费用">
-                      <span>{{props.row.amount }}元</span>
-                    </el-form-item>
+            <el-form-item label="总费用">
+              <span>{{props.row.amount }}元</span>
+            </el-form-item>
 
           </el-form>
         </template>
@@ -98,7 +108,7 @@
 
 
       <el-table-column label="任务号" prop="id" sortable></el-table-column>
-      <el-table-column label="场景" prop="scene" sortable></el-table-column>
+      <el-table-column label="场景" prop="scene" sortable show-overflow-tooltip></el-table-column>
       <el-table-column label="项目" prop="project_name" sortable></el-table-column>
       <el-table-column label="提交时间" prop="SubmitDate" sortable></el-table-column>
       <el-table-column label="状态" prop="Status" sortable></el-table-column>
@@ -143,10 +153,12 @@
       return {
         //form表单
         formInline: {
-          user: '',
-          region: ''
+          id: null,
+          scene: '',
+          project_name: '',
+          submit_date: [null,null] ,
+
         },
-        value: '15',
         //单选框
         checked: false,
         // loading:true,
@@ -158,7 +170,7 @@
         multipleSelection: [],
         currentPage: 1,
         pageSize: 10,
-        pages:{},
+        pages: {},
         // per_page:null,
         // page:null
       }
@@ -171,6 +183,8 @@
     methods: {
       onSubmit() {
         console.log('submit!');
+        console.log(this.formInline.submit_date);
+        this.getData();
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -186,19 +200,23 @@
         this.getData();
         console.log(`当前页: ${currentPage}`);
       },
-      getData(){
+      getData() {
         var url = this.HOST + "/job";
-        this.$axios.get(url,{
-          params:{
-            page:this.currentPage,
-            per_page:this.pageSize,
-            status:1
+        this.$axios.get(url, {
+          params: {
+            page: this.currentPage,
+            per_page: this.pageSize,
+            status: 1,
+            job_id: this.formInline.id,
+            scene: this.formInline.scene,
+            project_name: this.formInline.project_name,
+            submit_date: this.formInline.submit_date
           }
 
         }).then(res => {
           console.log(res.data);
           this.tableData5 = res.data.data;
-          this.pages=res.data;
+          this.pages = res.data;
           if (store.state.token) {
             this.$router.push('/rendering');
           } else {
@@ -211,11 +229,15 @@
       // postData(){
       //   var url = this.HOST + "/job";
       //   this.$axios.post(url,{
-      //       status:1
+      //       job_id:this.formInline.job_id,
+      //       scene:this.formInline.scene,
+      //       project_name:this.formInline.project_name,
+      //       SubmitDate:this.formInline.SubmitDate
       //   }).then(rs=>{
       //     console.log(rs);
       //   })
       // },
+
       //导出表格
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => v[j]))
@@ -223,9 +245,9 @@
       export2Excel() {
         if (this.multipleSelection.length) {
           require.ensure([], () => {
-            const { export_json_to_excel } = require('../../../vendor/Export2Excel');
-            const tHeader = ['任务号', '场景', '项目', '提交时间', '状态','开始时间','完成时间','帧范围','等待','渲染中','已完成','失败','总时间','总费用']; //对应表格输出的title
-            const filterVal = ['id', 'scene', 'project_name', 'SubmitDate', 'Status','StartDate','FinishDate','Frames','QueuedChunks','RenderingChunks','CompletedChunks','FailedChunks','TotalTaskTime','amount']; // 对应表格输出的数据
+            const {export_json_to_excel} = require('../../../vendor/Export2Excel');
+            const tHeader = ['任务号', '场景', '项目', '提交时间', '状态', '开始时间', '完成时间', '帧范围', '等待', '渲染中', '已完成', '失败', '总时间', '总费用']; //对应表格输出的title
+            const filterVal = ['id', 'scene', 'project_name', 'SubmitDate', 'Status', 'StartDate', 'FinishDate', 'Frames', 'QueuedChunks', 'RenderingChunks', 'CompletedChunks', 'FailedChunks', 'TotalTaskTime', 'amount']; // 对应表格输出的数据
             const list = this.multipleSelection;
             const data = this.formatJson(filterVal, list);
             export_json_to_excel(tHeader, data, '正在渲染任务'); //对应下载文件的名字
@@ -254,8 +276,8 @@
         }
       },
       listCount() {
-        this.$message('当前列表共' + this.value + '条数据，已查看');
-        this.value = '';
+        this.$message('当前列表共' + this.pages.total + '条数据，已查看');
+        // this.pages.total = '';
       },
 
     },
