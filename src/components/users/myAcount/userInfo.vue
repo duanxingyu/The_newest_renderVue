@@ -83,7 +83,7 @@
           company: '',
           company_url: '',
         },
-        forms: {},
+        // forms: {},
         rules: {
           // user_name: [{
           //   required: true,
@@ -156,11 +156,7 @@
     },
     created() {
       var url = this.HOST + '/user_profile'
-      this.$axios.get(url, {
-        params: {
-          data_type: "user_profile",
-        }
-      }).then(res => {
+      this.$axios.get(url).then(res => {
         console.log(res.data.data)
         this.forms = res.data.data
       }).catch(error => {

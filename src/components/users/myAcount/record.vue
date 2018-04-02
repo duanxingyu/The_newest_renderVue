@@ -99,20 +99,15 @@
 
       //通过此方法将分页数据渲染出来
       getData() {
-        var recordUrl = this.HOST + '/record';
-        this.$axios.get(recordUrl, {
-          params: {
-            per_page: 200,
-            page: 1
-          }
-        }).then(res => {
-          console.log(res.data);
-          this.pages = res.data;
-          this.tableData = res.data.items
-          console.log(res.data.items)
-        }).catch(error => {
-          console.log(error);
-        })
+        // var recordUrl = this.HOST + '/record';
+        // this.$axios.get().then(res => {
+        //   console.log(res.data);
+        //   this.pages = res.data;
+        //   this.tableData = res.data.items
+        //   console.log(res.data.items)
+        // }).catch(error => {
+        //   console.log(error);
+        // })
       }
     }
   }

@@ -3,7 +3,7 @@
     <h2>子账户管理</h2><br/>
     <div class="btn">
 
-        <el-badge :value="value" class="item">
+        <el-badge :value="this.tableData.length" class="item">
           <el-button type="primary" size="medium" icon="el-icon-tickets" @click="listCount">列表</el-button>
         </el-badge>
 
@@ -15,18 +15,18 @@
     <!--添加子账户对话框-->
     <el-dialog width="40%" title="添加子账号" :visible.sync="dialogFormVisible1">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
-          <el-input v-model="form.name" placeholder="请输入用户名" auto-complete="off"></el-input>
+        <el-form-item label="用户名" prop="user_name" :label-width="formLabelWidth">
+          <el-input v-model="form.user_name" placeholder="请输入用户名" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="手机号" prop="phone" :label-width="formLabelWidth">
           <el-input v-model.number="form.phone" placeholder="请输入手机号" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="性别" prop="sex" :label-width="formLabelWidth">
-          <el-select v-model="form.sex" placeholder="请选择性别">
-            <el-option label="男" value="man"></el-option>
-            <el-option label="女" value="woman"></el-option>
+        <el-form-item label="性别" prop="genders" :label-width="formLabelWidth">
+          <el-select v-model="form.genders" placeholder="请选择性别">
+            <el-option label="男" value="m"></el-option>
+            <el-option label="女" value="w"></el-option>
           </el-select>
         </el-form-item>
 
@@ -44,57 +44,105 @@
 
 
     <!--表格-->
-    <el-table :data="tableData" sort-by="{tableData.phone}" style="width: 100%;margin-left: 10px;">
-      <el-table-column label="用户名" width="180">
+    <el-table :data="tableData"  style="width: 100%;margin-left: 10px;">
+
+
+      <el-table-column label="用户名" >
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.name }}</span>
+          <span style="margin-left: 10px">{{ scope.row.user_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="联系方式" width="180" prop="phone" sortable>
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.phone }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="账户类型" width="180">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.account }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="联系方式" width="180" sortable>
+      <el-table-column label="手机号"  prop="phone">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="350px">
+      <el-table-column label="账户类型" prop="phone">
         <template slot-scope="scope">
-          <el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>
-          <el-button size="mini" round type="info" @click="handleIn(scope.$index, scope.row)">转入</el-button>
-          <el-button size="mini" round @click="handleOut(scope.$index, scope.row)">转出</el-button>
-          <el-button size="mini" round type="danger" @click="handleDelete(scope.$index, scope.row)">修改密码</el-button>
+          <span style="margin-left: 10px">{{$childAccount.getAccountType(scope.row.account_type)  }}</span>
         </template>
       </el-table-column>
+
+      <el-table-column label="启用" prop="active">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{$childAccount.getActive(scope.row.active)  }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="余额" prop="phone" >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.balance }}</span>
+        </template>
+      </el-table-column>
+
+      <!--<el-table-column label="余额" prop="phone"  sortable>-->
+        <!--<template slot-scope="scope">-->
+          <!--<span style="margin-left: 10px">{{ scope.row.balance }}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column label="充值记录"  sortable>-->
+        <!--<template slot-scope="scope">-->
+          <!--<span style="margin-left: 10px">{{ scope.row.balance }}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
+      <el-table-column label="操作" width="550px">
+
+        <template slot-scope="scope">
+          <div  v-if="scope.row.account_type==='1' ">
+            <el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>
+            <el-button size="mini" round type="info" @click="handleIn(scope.$index, scope.row)">转入</el-button>
+            <el-button size="mini" round @click="handleOut(scope.$index, scope.row)">转出</el-button>
+            <el-button size="mini" round type="danger" @click="handleDelete(scope.$index, scope.row)">修改密码</el-button>
+          </div>
+          <div v-else>
+            <el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>
+          </div>
+        </template>
+
+        <!--<template slot-scope="scope">-->
+          <!--<el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>-->
+        <!--</template>-->
+
+
+      </el-table-column>
+
+      <!--<el-table-column label="操作" width="350px" >-->
+      <!---->
+      <!--</el-table-column>-->
     </el-table>
     <!--编辑对话框-->
     <el-dialog width="40%" title="编辑" :visible.sync="dialogFormVisible2">
-      <el-form :model="form"  ref="form" >
+      <el-form :model="editForms"  ref="editForms" >
 
-        <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
-          <el-input v-model="editForms.name" placeholder="请输入用户名" auto-complete="off"></el-input>
+        <el-input type="hidden" v-model="editForms.user_id" placeholder="请输入用户名" auto-complete="off"></el-input>
+
+        <el-form-item label="用户名" prop="user_name" :label-width="formLabelWidth">
+          <el-input v-model="editForms.user_name" placeholder="请输入用户名" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="手机号" prop="phone" :label-width="formLabelWidth">
           <el-input v-model.number="editForms.phone" placeholder="请输入手机号" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="性别" prop="sex" :label-width="formLabelWidth">
-          <el-select v-model="editForms.sex" placeholder="请选择性别">
-            <el-option label="男" value="man"></el-option>
-            <el-option label="女" value="woman"></el-option>
+        <el-form-item label="性别" prop="genders" :label-width="formLabelWidth">
+          <el-select v-model="editForms.genders" placeholder="请选择性别">
+            <el-option label="男" value="m"></el-option>
+            <el-option label="女" value="w"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
           <el-input v-model="editForms.password" placeholder="请输入密码" type="password" auto-complete="off"></el-input>
         </el-form-item>
+
+        <!--<el-form-item label="QQ" prop="qqnumber" :label-width="formLabelWidth">-->
+          <!--<el-input v-model="editForms.qqnumber" placeholder="请输入密码" type="password" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+
+        <!--<el-form-item label="QQ" prop="qqnumber" :label-width="formLabelWidth">-->
+          <!--<el-input v-model="editForms.qqnumber" placeholder="请输入密码" type="password" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -107,6 +155,7 @@
 </template>
 
 <script>
+  import {Loading} from 'element-ui'
   export default {
     name: 'childAcount',
     data() {
@@ -128,46 +177,24 @@
         dialogFormVisible2: false, //激活编辑对话框
         checked:false,
         form: {
-          name: '',
+          user_name: '',
           phone: null,
-          sex: '',
+          genders: '',
           password: '',
         },
+        // 将添加子账户的api数据添加至forms对象
         value:'12',
         formLabelWidth: '15%',
 
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          account: '主账户',
-          phone: '13331077761',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          phone: '18631077761',
-          account: '子账户',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          phone: '13891077761',
-          account: '子账户',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          phone: '13561077761',
-          account: '主账户',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+        tableData: [],
+
         rules: {
-          name: [{
+          user_name: [{
             required: true,
             message: '请输入用户名',
           }, {
               min: 3,
-              max: 5,
+              max: 16,
               message: '长度在 3 到 16 个字符',
               trigger: 'blur'
             },
@@ -181,7 +208,7 @@
             trigger: 'blur'
           }
           ],
-          sex: [{
+          genders: [{
             required: true,
             message: '请选择性别',
           }],
@@ -192,14 +219,26 @@
           }],
         },
         //将表格中的数据遍历到子账户对话框中
-        editForms:{},
+        editForms:{
+          user_id:null,
+          user_name: '',
+          phone: null,
+          genders: '',
+          password: '',
+        },
       };
 
     },
+    created(){
+
+      this.getData();
+      this.editData();
+    },
     methods: {
       handleEdit(index, row) {
-        this.editForms=row
+        // this.editForms=row
         console.log(row);
+
 
       },
       handleIn(index, row) {
@@ -214,12 +253,14 @@
       dialogSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.postData();
+            this.dialogFormVisible1=false;
             this.$notify({
               title: '成功',
               message: '修改成功',
               type: 'success'
             });
-            this.dialogFormVisible=false
+
           } else {
             console.log('error submit!!');
             this.$notify({
@@ -235,9 +276,68 @@
         this.$message('当前列表共 ' + this.value + ' 条数据，已查看');
         this.value = '';
       },
+      //获取api表格数据
+      getData(){
+        var url = this.HOST + '/sub_manage';
+        this.$axios.get(url).then(res=>{
+          console.log(res.data.data);
+          this.tableData=res.data.data;
+        }).catch(error=>{
+          console.log('表格'+ error)
+        })
+      },
+
+      //新增子账户api
+      postData(){
+        var url = this.HOST + '/sub_manage';
+        this.$axios.post(url,{
+          operate:'addsub',
+          user_data:{
+            user_name:this.form.user_name,
+            phone:this.form.phone,
+            genders:this.form.genders,
+            password:this.form.password
+          }
+        }).then(res=>{
+          let NewPage = '_empty' + '?time=' + new Date().getTime()/1000
+          // 之后将页面push进去
+          this.$router.push(NewPage)
+          // 再次返回上一页即可
+          this.$router.go(-1)
+          console.log(res);
+        }).catch(error=>{
+          console.log(error)
+        })
+      },
+
+      editData(){
+
+        var url=this.HOST+'/user_profile'
+        this.$axios.get(url,{
+          user_id:this.editForms.user_id,
+        }).then(res=>{
+          this.editForms=res.data.data
+          console.log(res)
+        }).catch(error=>{
+          console.log(error);
+        })
+      },
+
+      //转入
+      reCharge(){
+        var url=this.HOST+'/sub_manage'
+        this.$axios.post(url,{
+          operate:'recharge',
+        }).then(res=>{
+          console.log('转入'+res)
+        }).catch(error=>{
+          console.log('转入'+error);
+        })
+      },
+
       //点击编辑对话框执行的操作
       editDialog(){
-
+        // this.editData()
       }
     },
 

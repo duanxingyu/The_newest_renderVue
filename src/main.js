@@ -7,6 +7,7 @@ import 'babel-polyfill'
 import Element from 'element-ui'
 import {Loading} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import childAccount from './util/childAccount'
 import Axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/store'
@@ -119,7 +120,8 @@ Axios.interceptors.response.use(response => {
 Axios.defaults.headers.common['Authentication-Token'] = store.state.token;
 Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-// Vue.prototype.$OBJ = obj
+Vue.prototype.$childAccount=childAccount
+
 
 Vue.prototype.$axios = Axios
 // 跨域请求问题
