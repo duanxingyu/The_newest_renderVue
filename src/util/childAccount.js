@@ -1,4 +1,14 @@
+import Vue from 'vue'
+
 export default {
+  data(){
+    Vue.component('button',{
+      template:'<el-switch v-model="value"> </el-switch>'
+    });
+    return{
+      value:''
+    }
+  },
   getAccountType(str){
     let result='';
       if(str==='1') {
