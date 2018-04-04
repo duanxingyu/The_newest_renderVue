@@ -177,9 +177,7 @@
       // this.postData();
     },
     methods: {
-
       onSubmit() {
-
         // console.log(this.formInline.submit_date);
         this.getData();
 

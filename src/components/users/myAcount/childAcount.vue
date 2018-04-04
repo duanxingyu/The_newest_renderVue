@@ -74,7 +74,7 @@
 
       <el-table-column label="余额" prop="phone" >
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.balance }}</span>
+          <span style="margin-left: 10px">{{ scope.row.balance}}</span>
         </template>
       </el-table-column>
 
@@ -114,7 +114,8 @@
             <el-button size="mini" round type="danger" @click="ModPass(scope.$index, scope.row),dialogFormVisible3=true">修改密码</el-button>
           </div>
           <div v-else>
-            <el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>
+            <el-button size="mini" round ><router-link to="/userInfo">编辑</router-link></el-button>
+            <!--@click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true"-->
           </div>
         </template>
 
@@ -143,7 +144,7 @@
         </el-form-item>
 
         <el-form-item label="手机号" prop="phone" :label-width="formLabelWidth">
-          <el-input v-model.number="editForms.phone" placeholder="请输入手机号" auto-complete="off"></el-input>
+          <el-input v-model="editForms.phone" placeholder="请输入手机号" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
@@ -169,7 +170,7 @@
           <el-input v-model="editForms.company"></el-input>
         </el-form-item>
 
-        <el-form-item label="公司主页:" prop="conpany_url" :label-width="formLabelWidth">
+        <el-form-item label="公司主页:" prop="company_url" :label-width="formLabelWidth">
           <el-input v-model="editForms.company_url"></el-input>
         </el-form-item>
 
@@ -211,7 +212,11 @@
       let CheckTel = (rule, value, callback) => {
         if (!value) {
           callback(new Error('请输入手机号码'));
-        } else if (value.toString().length != 11) {
+        }
+        // else if (!Number.isInteger(value)) {
+        //   callback(new Error('手机号码必须是数字'));
+        // }
+        else if (value.toString().length != 11) {
           callback(new Error('手机号码必须是11位'));
         } else {
           callback();
@@ -247,7 +252,7 @@
             message: '请输入用户名',
           }, {
               min: 3,
-              max: 16,
+              max: 50,
               message: '长度在 3 到 16 个字符',
               trigger: 'blur'
             },
@@ -258,10 +263,7 @@
           phone: [{
             required: true,
             validator: CheckTel,
-            trigger: 'blur'
-          },{
-            type:'number',
-            message:'手机号必须是数值'
+            trigger: 'change'
           }
           ],
           genders: [{
@@ -283,6 +285,29 @@
               trigger: 'blur'
             }
           ],
+          address: [{
+            required: true,
+            message: '请输入所在地',
+            trigger: 'blur'
+          }],
+          qqnumber: [{
+            required: true,
+            message: '请输入QQ',
+            trigger: 'blur'
+          }, {
+            type: 'number',
+            message: 'QQ必须为数字值'
+          }],
+          company: [{
+            required: true,
+            message: '请输入公司名',
+            trigger: 'blur'
+          }],
+          company_url: [{
+            required: true,
+            message: '请输入公司主页',
+            trigger: 'blur'
+          }],
         },
         //将表格中的数据遍历到子账户对话框中
         editForms:{
@@ -305,12 +330,12 @@
       };
 
     },
+    // mounted(){
+    //   // let
+    //   this.getEditData();
+    // },
     created(){
-
       this.getData();
-
-      this.getEditData();
-
     },
 
     methods: {
@@ -323,6 +348,7 @@
         //根据表格中的user_id来修改密码
         this.editForms=row
         console.log(row);
+        // this.getEditData();
 
       },
       //转入按钮
@@ -404,20 +430,20 @@
         })
       },
       //编辑对话框get请求
-      getEditData(){
-
-        var url=this.HOST+'/user_profile';
-        this.$axios.get(url,{
-          params:{
-            user_id:this.editForms.user_id,
-          }
-        }).then(res=>{
-          // this.editForms=res.data.data
-          console.log(res.data)
-        }).catch(error=>{
-          console.log(error);
-        })
-      },
+      // getEditData(){
+      //
+      //   var url=this.HOST+'/user_profile';
+      //   this.$axios.get(url,{
+      //     params:{
+      //       user_id:this.editForms.user_id,
+      //     }
+      //   }).then(res=>{
+      //     // this.editForms=res.data.data
+      //     console.log(typeof (res.data.data.phone))
+      //   }).catch(error=>{
+      //     console.log(error);
+      //   })
+      // },
       //编辑对话框post请求
       postEidtData(){
         var url=this.HOST+'/user_profile';
@@ -437,7 +463,19 @@
 
         }).then(res=>{
           // this.editForms=res.data.data
-          console.log(res.data.data)
+          setTimeout(()=>{
+            var arr=res.data;
+            for (var i=0;i<arr.length;i++){
+                console.log(arr)
+              }
+            if(res.data.code===1) {
+              this.$message.error(`${res.data.data[i].msg}`);
+              console.log(res.data.data[i].msg);
+            }else{
+              this.$message.success(`${res.data.msg}`);
+            }
+          },1000);
+          console.log(res.data)
           // if(res.data)
         }).catch(error=>{
           console.log(error);
@@ -463,7 +501,7 @@
             if(res.data.code===1) {
               this.$message.error(`${res.data.msg}`)
             }else{
-              this.$message(`${res.data.msg}`)
+              this.$message.success(`${res.data.msg}`)
             }
           },4500)
           console.log(res)
@@ -491,7 +529,7 @@
             if (res.data.code === 1) {
               this.$message.error(`${res.data.msg}`)
             } else {
-              this.$message(`${res.data.msg}`)
+              this.$message.success(`${res.data.msg}`)
             }
           },4000)
 
@@ -523,10 +561,10 @@
         this.$refs[formName].validate((valid)=>{
           if(valid){
             this.postEidtData();
+
             setTimeout(()=>{
-              this.dialogFormVisible3=false;
-              this.$message.success("修改密码成功");
-            },3500)
+              this.dialogFormVisible2=false;
+            },1000)
           }else {
             this.$notify({
               title: '提示',
