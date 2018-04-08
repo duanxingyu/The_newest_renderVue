@@ -25,7 +25,7 @@
 
       <el-form-item label="提交时间">
         <el-date-picker v-model="formInline.submit_date" type="daterange" range-separator="至" start-placeholder="开始日期"
-                        end-placeholder="结束日期"  format="yyyy-MM-dd">
+                        end-placeholder="结束日期"  format="yyyy-MM-dd"  value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
 
@@ -88,9 +88,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="任务号" prop="id" sortable></el-table-column>
-      <el-table-column label="场景" prop="scene" sortable></el-table-column>
-      <el-table-column label="项目" prop="project_name" sortable></el-table-column>
+      <el-table-column label="任务号" prop="id" sortable width="180"></el-table-column>
+      <el-table-column label="场景" prop="scene" sortable ></el-table-column>
+      <el-table-column label="项目" prop="project_name" sortable width="220"></el-table-column>
       <el-table-column label="提交时间" prop="SubmitDate" sortable></el-table-column>
       <el-table-column label="状态" prop="Status" sortable></el-table-column>
 
@@ -136,7 +136,7 @@
           id: null,
           scene: '',
           project_name: '',
-          submit_date: [null,null] ,
+          submit_date: [] ,
 
 
         },
@@ -183,7 +183,8 @@
             job_id: this.formInline.id,
             scene: this.formInline.scene,
             project_name: this.formInline.project_name,
-            submit_date: this.formInline.submit_date
+            submit_date1: this.formInline.submit_date[0],
+            submit_date2: this.formInline.submit_date[1],
           }
         }).then(res => {
           console.log(res.data)

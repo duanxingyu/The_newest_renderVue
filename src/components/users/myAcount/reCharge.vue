@@ -10,6 +10,7 @@
         <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
       </div>
       <div v-for="i in tableData"  class="text item">
+        <div class="list-item" v-show="false">user_id:<span class="list-value">{{ i.user_id }}元</span></div><br/>
         <div class="list-item">当前余额:<span class="list-value">{{ i.balance }}元</span></div><br/>
         <div class="list-item">代金券金额：<span class="list-value">{{i.coupon}}元</span></div><br/>
         <div class="list-item">用户等级：<span class="list-value">{{i.role}}</span></div><br/>
@@ -26,18 +27,31 @@
         <!--</el-table>-->
       <!--</el-tab-pane>-->
       <el-tab-pane label="普通充值记录">
-        <el-table :data="tableData1" style="width: 100%">
-          <el-table-column prop="recharge_time" label="日期" width="180"></el-table-column>
-          <el-table-column prop="par" label="金额" width="180"></el-table-column>
-          <el-table-column prop="coupon_code" label="代金券"></el-table-column>
+        <el-table :data="tableData1.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%">
+          <el-table-column prop="amount" label="金额"></el-table-column>
+          <el-table-column prop="currency" label="币种" width="180"></el-table-column>
+          <el-table-column prop="status" label="状态"></el-table-column>
+          <el-table-column prop="created_at" label="日期" width="220"></el-table-column>
         </el-table>
+        <el-pagination @size-change="sizeChange" @current-change="currentChange"
+                       :current-page.sync="currentPage" :page-sizes="[5,10,20,40,80]"
+                       :page-size="pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="pages.total">
+        </el-pagination>
       </el-tab-pane>
       <el-tab-pane label="代金券充值记录">
-        <el-table :data="tableData2" style="width: 100%">
-          <el-table-column prop="coupon_code" label="代金券"></el-table-column>
+        <el-table :data="tableData2.slice((currentPage1-1)*pageSize1,currentPage1*pageSize1)" style="width: 100%">
+          <el-table-column prop="coupon_code" label="代金券"  width="180"></el-table-column>
           <el-table-column prop="par" label="金额" width="180"></el-table-column>
           <el-table-column prop="recharge_time" label="日期" width="180"></el-table-column>
         </el-table>
+        <el-pagination @size-change="sizeChange" @current-change="currentChange"
+                       :current-page.sync="currentPage1" :page-sizes="[5,10,20,40,80]"
+                       :page-size="pageSize1"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="pages1.total">
+        </el-pagination>
       </el-tab-pane>
     </el-tabs>
 
@@ -129,7 +143,13 @@
           }]
         },
         //支付方式默认支付宝
-        radio2: 1
+        radio2: 1,
+        currentPage: 1,
+        pageSize: 10,
+        currentPage1: 1,
+        pageSize1: 10,
+        pages: {},
+        pages1:{},
       }
 
     },
@@ -138,37 +158,77 @@
     },
     methods: {
       getData(){
+        // var self=this;
         var url=this.HOST;
+        // console.log(self);
         function getDetails() {
           return axios.get(url+'/account_info');
         }
         function getcoupon_charge() {
-          return axios.get(url+'/coupon_charge');
+          return axios.get(url+'/coupon_charge',{
+            params:{
+              page: 1,
+              per_page: 500,
+            }
+          });
         }
-        // function getUser_recharge() {
-        //   return axios.get(url + '/user_recharge');
-        // }
+        function getUser_recharge() {
+          return axios.get(url + '/user_recharge',{
+            params:{
+              page: 1,
+              per_page: 500,
+            }
+          });
+        }
         //执行axios前首先保存this
         let _this=this;
-        axios.all([getDetails(),getcoupon_charge()]).then(axios.spread(function (detail,charge) {
+        axios.all([getDetails(),getUser_recharge(),getcoupon_charge()]).then(axios.spread(function (detail,user_charge,charge) {
           //获取账户详情
           console.log(detail.data.data);
           // console.log(_this);
           _this.tableData=detail.data.data;
 
           //普通用于充值
-          // console.log(user_charge.data);
-          // _this.tableData1=user_charge.data;
+          console.log(user_charge.data);
+          _this.tableData1=user_charge.data.data;
+          _this.pages=user_charge.data;
 
           //代金券充值
           console.log(charge.data);
           _this.tableData2=charge.data.data
+          _this.pages1=charge.data;
 
         })).catch(error=>{
           console.log(error);
         })
       },
-
+      //每页显示条数
+      sizeChange(size) {
+        this.pageSize = size
+        console.log(`每页 ${size} 条`);
+      },
+      // 当前页
+      currentChange(currentPage) {
+        this.currentPage = currentPage
+        console.log(`当前页: ${currentPage}`);
+      },
+      //获取表格数据
+      //代金券充值post
+      postCharge(){
+        var url=this.HOST+'/coupon_charge';
+        this.$axios.post(url,{
+          recharge_data: {coupon_code:this.form2.crashNumber}
+        }).then(res=>{
+          if(res.data.code===1){
+            this.$message.error(`${res.data.msg}`);
+          }else{
+            this.$message.success(`${res.data.msg}`);
+          }
+          console.log(res.data);
+        }).catch(error=>{
+          console.log(error);
+        })
+      },
       //现金充值
       dialogSubmit1(form1) {
         this.$refs[form1].validate((valid) => {
@@ -194,11 +254,8 @@
       dialogSubmit2(form2) {
         this.$refs[form2].validate((valid) => {
           if (valid) {
-            this.$notify({
-              title: '成功',
-              message: '修改成功',
-              type: 'success'
-            });
+            this.postCharge();
+
             this.dialogFormVisible1 = false
           } else {
             console.log('error submit!!');
@@ -221,7 +278,7 @@
   }
 
   .box-card {
-    width: 650px;
+    width: 750px;
     margin: 20px 10px;
   }
 
@@ -231,7 +288,7 @@
   }
 
   .tabsCard {
-    width: 650px;
+    width: 750px;
     margin: 20px 10px;
   }
   img{

@@ -3,13 +3,13 @@
     <h2>子账户管理</h2><br/>
     <div class="btn">
 
-        <el-badge :value="this.tableData.length" class="item">
-          <el-button type="primary" size="medium" icon="el-icon-tickets" @click="listCount">列表</el-button>
-        </el-badge>
+      <el-badge :value="this.tableData.length" class="item">
+        <el-button type="primary" size="medium" icon="el-icon-tickets" @click="listCount">列表</el-button>
+      </el-badge>
 
-        <el-button type="success" size="medium" icon="el-icon-plus" @click="dialogFormVisible1 = true"
-                   style="margin-left: 15px">添加子账号
-        </el-button>
+      <el-button type="success" size="medium" icon="el-icon-plus" @click="dialogFormVisible1 = true"
+                 style="margin-left: 15px">添加子账号
+      </el-button>
 
     </div>
     <!--添加子账户对话框-->
@@ -43,19 +43,19 @@
     <!--对话框结束-->
 
     <!--表格-->
-    <el-table :data="tableData"  style="width: 100%;margin-left: 10px;">
-        <el-table-column label="user_id" v-if="show">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.user_id }}</span>
-          </template>
-        </el-table-column>
+    <el-table :data="tableData" style="width: 100%;margin-left: 10px;">
+      <el-table-column label="user_id" v-if="show">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.user_id }}</span>
+        </template>
+      </el-table-column>
 
-      <el-table-column label="用户名" >
+      <el-table-column label="用户名">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.user_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="手机号"  prop="phone">
+      <el-table-column label="手机号" prop="phone">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.phone }}</span>
         </template>
@@ -72,28 +72,29 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="余额" prop="phone" >
+      <el-table-column label="余额" prop="phone">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.balance}}</span>
         </template>
       </el-table-column>
 
       <!--<el-table-column label="充值记录"  sortable>-->
-        <!--<template slot-scope="scope">-->
-          <!--<span style="margin-left: 10px">{{ scope.row.balance }}</span>-->
-        <!--</template>-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{ scope.row.balance }}</span>-->
+      <!--</template>-->
       <!--</el-table-column>-->
 
       <el-table-column label="操作" width="550px">
 
         <template slot-scope="scope">
-          <div  v-if="scope.row.account_type==='1' ">
+          <div v-if="scope.row.account_type==='1' ">
             <!--转入prover-->
             <el-popover ref="popoverIn"
                         placement="bottom"
                         width="200"
                         trigger="click">
-              <el-input-number v-model="num1" @change="handleChange" size="small" :min="1" :max="50000" label="转入金额"></el-input-number>
+              <el-input-number v-model="num1" @change="handleChange" size="small" :min="1" :max="50000"
+                               label="转入金额"></el-input-number>
               <el-button type="primary" size="mini" @click="handleIn(scope.$index, scope.row)">转入</el-button>
             </el-popover>
 
@@ -102,27 +103,32 @@
                         placement="bottom"
                         width="200"
                         trigger="click">
-              <el-input-number v-model="num2" @change="handleChange" size="small" :min="1" :max="50000" label="转出金额"></el-input-number>
+              <el-input-number v-model="num2" @change="handleChange" size="small" :min="1" :max="50000"
+                               label="转出金额"></el-input-number>
               <el-button type="primary" size="mini" @click="handleOut(scope.$index, scope.row)">转出</el-button>
             </el-popover>
 
-            <el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>
-            <el-button size="mini" round type="info" v-popover:popoverIn >转入</el-button>
+            <el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑
+            </el-button>
+            <el-button size="mini" round type="info" v-popover:popoverIn>转入</el-button>
             <!--@click="handleIn(scope.$index, scope.row)"-->
 
-            <el-button size="mini" round v-popover:popoverOut >转出</el-button>
-            <el-button size="mini" round type="danger" @click="ModPass(scope.$index, scope.row),dialogFormVisible3=true">修改密码</el-button>
+            <el-button size="mini" round v-popover:popoverOut>转出</el-button>
+            <el-button size="mini" round type="danger"
+                       @click="ModPass(scope.$index, scope.row),dialogFormVisible3=true">修改密码
+            </el-button>
           </div>
           <div v-else>
-            <el-button size="mini" round ><router-link to="/userInfo">编辑</router-link></el-button>
+            <el-button size="mini" round>
+              <router-link to="/userInfo">编辑</router-link>
+            </el-button>
             <!--@click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true"-->
           </div>
         </template>
 
 
-
         <!--<template slot-scope="scope">-->
-          <!--<el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>-->
+        <!--<el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑</el-button>-->
         <!--</template>-->
 
 
@@ -135,9 +141,9 @@
 
     <!--编辑对话框-->
     <el-dialog width="40%" title="编辑" :visible.sync="dialogFormVisible2">
-      <el-form :model="editForms" :rules="rules"  ref="editForms" >
+      <el-form :model="editForms" :rules="rules" ref="editForms">
 
-        <el-input type="hidden" v-model="editForms.user_id" ></el-input>
+        <el-input type="hidden" v-model="editForms.user_id"></el-input>
 
         <el-form-item label="用户名" prop="user_name" :label-width="formLabelWidth">
           <el-input v-model="editForms.user_name" placeholder="请输入用户名" auto-complete="off"></el-input>
@@ -184,7 +190,7 @@
 
     <!--修改密码对话框-->
     <el-dialog width="40%" title="修改密码" :visible.sync="dialogFormVisible3">
-      <el-form :model="passForms" :rules="rules"  ref="passForms" >
+      <el-form :model="passForms" :rules="rules" ref="passForms">
 
         <el-input type="hidden" v-model="passForms.user_id"></el-input>
 
@@ -204,7 +210,8 @@
 </template>
 
 <script>
-  import {Loading} from 'element-ui'
+  import Vue from 'vue'
+
   export default {
     name: 'childAcount',
     data() {
@@ -225,23 +232,23 @@
       return {
         // 计数器
         num1: 1,
-        num2:1,
+        num2: 1,
         //隐藏表格第一列
-        show:false,
+        show: false,
         // 对话框开始
         dialogFormVisible1: false, //激活子账户对话框
         dialogFormVisible2: false, //激活编辑对话框
-        dialogFormVisible3:false,   //激活修改密码对话框
-        checked:false,
+        dialogFormVisible3: false,   //激活修改密码对话框
+        checked: false,
         form: {
-          user_id:null,
+          user_id: null,
           user_name: '',
           phone: null,
           genders: '',
           password: '',
         },
         // 将添加子账户的api数据添加至forms对象
-        value:'12',
+        value: '12',
         formLabelWidth: '15%',
 
         tableData: [],
@@ -251,15 +258,15 @@
             required: true,
             message: '请输入用户名',
           }, {
-              min: 3,
-              max: 50,
-              message: '长度在 3 到 16 个字符',
-              trigger: 'blur'
-            },
+            min: 3,
+            max: 50,
+            message: '长度在 3 到 16 个字符',
+            trigger: 'blur'
+          },
             {
-              pattern:/^[0-9a-zA-Z_\u4e00-\u9fa5][a-zA-Z_\u4e00-\u9fa5]+[0-9a-zA-Z_\u4e00-\u9fa5]+$/,
-              message:'用户名不能全为数字'
-          }],
+              pattern: /^[0-9a-zA-Z_\u4e00-\u9fa5][a-zA-Z_\u4e00-\u9fa5]+[0-9a-zA-Z_\u4e00-\u9fa5]+$/,
+              message: '用户名不能全为数字'
+            }],
           phone: [{
             required: true,
             validator: CheckTel,
@@ -310,23 +317,23 @@
           }],
         },
         //将表格中的数据遍历到子账户对话框中
-        editForms:{
-          user_id:null,
+        editForms: {
+          user_id: null,
           user_name: '',
-          email:'',
+          email: '',
           phone: null,
           genders: '',
           qqnumber: null,
-          address:'',
-          company:'',
-          company_url:''
+          address: '',
+          company: '',
+          company_url: ''
         },
-        passForms:{
-          user_id:null,
-          password:''
+        passForms: {
+          user_id: null,
+          password: ''
         },
-        reCharges:{},
-        payments:{},
+        reCharges: {},
+        payments: {},
       };
 
     },
@@ -334,46 +341,46 @@
     //   // let
     //   this.getEditData();
     // },
-    created(){
+    created() {
       this.getData();
     },
 
     methods: {
-      //计数器
+      //转入转出计数器
       handleChange(value) {
         console.log(value);
       },
       //编辑按钮
       handleEdit(index, row) {
         //根据表格中的user_id来修改密码
-        this.editForms=row
+        this.editForms = row
         console.log(row);
         // this.getEditData();
 
       },
       //转入按钮
       handleIn(index, row) {
-        this.reCharges=row;
+        this.reCharges = row;
         this.reCharge();
         console.log(row);
       },
       //转出按钮
       handleOut(index, row) {
-        this.payments=row;
+        this.payments = row;
         this.payment();
         console.log(row);
       },
       //修改密码按钮
       ModPass(index, row) {
-        this.passForms=row
+        this.passForms = row
         console.log(index, row);
       },
-      //添加子账号 提交post
+      //添加子账号提交表单按钮 提交post
       dialogSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.postData();
-            this.dialogFormVisible1=false;
+            this.dialogFormVisible1 = false;
             this.$notify({
               title: '成功',
               message: '修改成功',
@@ -397,35 +404,35 @@
         this.value = '';
       },
       //获取api表格数据
-      getData(){
+      getData() {
         var url = this.HOST + '/sub_manage';
-        this.$axios.get(url).then(res=>{
+        this.$axios.get(url).then(res => {
           console.log(res.data.data);
-          this.tableData=res.data.data;
-        }).catch(error=>{
-          console.log( error)
+          this.tableData = res.data.data;
+        }).catch(error => {
+          console.log(error)
         })
       },
 
       //新增子账户api
-      postData(){
+      postData() {
         var url = this.HOST + '/sub_manage';
-        this.$axios.post(url,{
-          operate:'addsub',
-          user_data:{
-            user_name:this.form.user_name,
-            phone:this.form.phone,
-            genders:this.form.genders,
-            password:this.form.password
+        this.$axios.post(url, {
+          operate: 'addsub',
+          user_data: {
+            user_name: this.form.user_name,
+            phone: this.form.phone,
+            genders: this.form.genders,
+            password: this.form.password
           }
-        }).then(res=>{
-          let NewPage = '_empty' + '?time=' + new Date().getTime()/1000
+        }).then(res => {
+          let NewPage = '_empty' + '?time=' + new Date().getTime() / 1000
           // 之后将页面push进去
           this.$router.push(NewPage)
           // 再次返回上一页即可
           this.$router.go(-1)
           console.log(res);
-        }).catch(error=>{
+        }).catch(error => {
           console.log(error)
         })
       },
@@ -445,74 +452,76 @@
       //   })
       // },
       //编辑对话框post请求
-      postEidtData(){
-        var url=this.HOST+'/user_profile';
-        this.$axios.post(url,{
-          operate:'usersave',
-          user_data:{
-            user_id:this.editForms.user_id,
-            user_name:this.editForms.user_name,
-            phone:this.editForms.phone,
-            email:this.editForms.email,
-            genders:this.editForms.genders,
-            qqnumber:this.editForms.qqnumber,
-            address:this.editForms.address,
-            company:this.editForms.company,
-            company_url:this.editForms.company_url
+      //提交编辑表单
+      postEidtData() {
+        var url = this.HOST + '/user_profile';
+        this.$axios.post(url, {
+          operate: 'usersave',
+          user_data: {
+            user_id: this.editForms.user_id,
+            user_name: this.editForms.user_name,
+            phone: this.editForms.phone,
+            email: this.editForms.email,
+            genders: this.editForms.genders,
+            qqnumber: this.editForms.qqnumber,
+            address: this.editForms.address,
+            company: this.editForms.company,
+            company_url: this.editForms.company_url
           }
 
-        }).then(res=>{
+        }).then(res => {
           // this.editForms=res.data.data
-          setTimeout(()=>{
-            var arr=res.data;
-            for (var i=0;i<arr.length;i++){
-                console.log(arr)
-              }
-            if(res.data.code===1) {
+          setTimeout(() => {
+            var arr = res.data;
+            for (var i = 0; i < arr.length; i++) {
+              console.log(arr)
+            }
+            if (res.data.code === 1) {
               this.$message.error(`${res.data.data[i].msg}`);
               console.log(res.data.data[i].msg);
-            }else{
+            } else {
               this.$message.success(`${res.data.msg}`);
             }
-          },1000);
+          }, 1000);
           console.log(res.data)
           // if(res.data)
-        }).catch(error=>{
+        }).catch(error => {
           console.log(error);
         })
       },
 
       //转入
-      reCharge(){
-        var url=this.HOST+'/sub_manage'
-        this.$axios.post(url,{
-          operate:'recharge',
-          user_data:{
-            user_id:this.reCharges.user_id,
-            amount:this.num1
+      reCharge() {
+        var url = this.HOST + '/sub_manage'
+        this.$axios.post(url, {
+          operate: 'recharge',
+          user_data: {
+            user_id: this.reCharges.user_id,
+            amount: this.num1
           }
-        }).then(res=>{
-          let NewPage = '_empty' + '?time=' + new Date().getTime()/1000
+        }).then(res => {
+          let NewPage = '_empty' + '?time=' + new Date().getTime() / 1000
           // 之后将页面push进去
           this.$router.push(NewPage)
           // 再次返回上一页即可
           this.$router.go(-1);
-          setTimeout(()=>{
-            if(res.data.code===1) {
+
+          setTimeout(() => {
+            if (res.data.code === 1) {
               this.$message.error(`${res.data.msg}`)
-            }else{
+            } else {
               this.$message.success(`${res.data.msg}`)
             }
-          },4500)
+          }, 4500)
           console.log(res)
-        }).catch(error=>{
+        }).catch(error => {
           console.log(error);
         })
       },
 
       //转出
-      payment(){
-        var url=this.HOST+'/sub_manage'
+      payment() {
+        var url = this.HOST + '/sub_manage'
         this.$axios.post(url, {
           operate: 'payment',
           user_data: {
@@ -520,18 +529,18 @@
             amount: this.num2,
           }
         }).then(res => {
-          let NewPage = '_empty' + '?time=' + new Date().getTime()/1000
+          let NewPage = '_empty' + '?time=' + new Date().getTime() / 1000
           // 之后将页面push进去
           this.$router.push(NewPage)
           // 再次返回上一页即可
           this.$router.go(-1);
-          setTimeout(()=>{
+          setTimeout(() => {
             if (res.data.code === 1) {
               this.$message.error(`${res.data.msg}`)
             } else {
               this.$message.success(`${res.data.msg}`)
             }
-          },4000)
+          }, 4000)
 
           console.log(res)
         }).catch(error => {
@@ -540,32 +549,32 @@
       },
 
       //修改密码post请求
-      passPost(){
-        var url=this.HOST+'/user_profile';
-        this.$axios.post(url,{
-          operate:'password',
-          user_data:{
-            user_id:this.passForms.user_id,
-            new_password:this.passForms.password
+      passPost() {
+        var url = this.HOST + '/user_profile';
+        this.$axios.post(url, {
+          operate: 'password',
+          user_data: {
+            user_id: this.passForms.user_id,
+            new_password: this.passForms.password
           }
-        }).then(res=>{
+        }).then(res => {
           console.log(res);
           console.log(this.user_id)
-        }).catch(err=>{
+        }).catch(err => {
           console.log(err);
         })
       },
 
       //点击编辑对话框执行的操作
-      editDialog(formName){
-        this.$refs[formName].validate((valid)=>{
-          if(valid){
+      editDialog(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
             this.postEidtData();
 
-            setTimeout(()=>{
-              this.dialogFormVisible2=false;
-            },1000)
-          }else {
+            setTimeout(() => {
+              this.dialogFormVisible2 = false;
+            }, 1000)
+          } else {
             this.$notify({
               title: '提示',
               message: '请按提示将信息填写完整',
@@ -575,15 +584,15 @@
         })
       },
       //修改密码对话框提交操作
-      passDialog(formName){
-        this.$refs[formName].validate((valid)=>{
-          if(valid){
+      passDialog(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
             this.passPost();
-            setTimeout(()=>{
-              this.dialogFormVisible3=false;
+            setTimeout(() => {
+              this.dialogFormVisible3 = false;
               this.$message.success("修改密码成功");
-            },3500)
-          }else {
+            }, 3500)
+          } else {
             this.$notify({
               title: '提示',
               message: '请按提示将信息填写完整',

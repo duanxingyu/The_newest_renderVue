@@ -53,7 +53,8 @@ Axios.interceptors.response.use(response => {
   // 对响应错误做点什么
   console.log(error.response);
   if (error.response.status === 401) {
-    alert("Error status  " + error.response.status + "，访问被拒绝");
+    // alert("Error status  " + error.response.status + "，访问被拒绝");
+    this.$notify.error(error.response.status);
   } else if (error.response.status === 404) {
     alert("Error status  " + error.response.status + "，对象没有找到！");
   } else if (error.response.status === 403) {

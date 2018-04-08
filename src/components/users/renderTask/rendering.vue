@@ -38,8 +38,9 @@
 
       <el-form-item label="提交时间">
         <el-date-picker v-model="formInline.submit_date" type="daterange" range-separator="至" start-placeholder="开始日期"
-                        end-placeholder="结束日期"  format="yyyy-MM-dd">
+                        end-placeholder="结束日期" format="yyyy-MM-dd"  value-format="yyyy-MM-dd">
         </el-date-picker>
+
       </el-form-item>
 
       <el-form-item>
@@ -147,13 +148,13 @@
     name: "rendering",
     data() {
       return {
+
         //form表单
         formInline: {
           id: null,
           scene: '',
           project_name: '',
-          submit_date: '' ,
-
+          submit_date: [] ,
         },
         //单选框
         checked: false,
@@ -177,33 +178,31 @@
       // this.postData();
     },
     methods: {
+      //查询按钮
       onSubmit() {
         // console.log(this.formInline.submit_date);
         this.getData();
 
       },
+      // 复选框
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      //每页显示条数
       sizeChange(size) {
         this.pageSize = size
         this.getData();
         console.log(`每页 ${size} 条`);
       },
-
+      // 当前页
       currentChange(currentPage) {
         this.currentPage = currentPage
         this.getData();
         console.log(`当前页: ${currentPage}`);
       },
+      //获取表格数据
       getData() {
         console.log('submit!');
-        var arr=this.formInline.submit_date;
-        let multis = [];
-        for (var i=0;i<arr.length;i++){
-          multis.push(arr[i]);
-          // console.log(multis[0],multis[1])
-        }
         var url = this.HOST + "/job";
         this.$axios.get(url, {
           params: {
@@ -213,7 +212,8 @@
             job_id: this.formInline.id,
             scene: this.formInline.scene,
             project_name: this.formInline.project_name,
-            submit_date: multis,
+            submit_date1:this.formInline.submit_date[0],
+            submit_date2:this.formInline.submit_date[1],
           }
 
         }).then(res => {
@@ -341,7 +341,7 @@
 
         }
       },
-      //移除选择框操作
+      //移除按钮
       removeCheckbox() {
         if (this.multipleSelection.length === 0) {
           this.$message({
@@ -352,7 +352,7 @@
           this.removeData();
         }
       },
-      //恢复选择框
+      //恢复按钮
       resumeCheckbox() {
         if (this.multipleSelection.length === 0) {
           this.$message({
@@ -363,7 +363,7 @@
           this.resumeData();
         }
       },
-      //全速选择框
+      //全速按钮
       speedupCheckbox() {
         if (this.multipleSelection.length === 0) {
           this.$message({
@@ -374,7 +374,7 @@
           this.speedupData();
         }
       },
-      // 暂停选择框
+      // 暂停选按钮
       suspendCheckbox() {
         if (this.multipleSelection.length === 0) {
           this.$message({
@@ -383,12 +383,9 @@
           });
         } else {
           this.suspendData();
-          this.$message({
-            message: '已成功选中',
-            type: 'success'
-          });
         }
       },
+      //列表按钮
       listCount() {
         this.$message('当前列表共' + this.pages.total + '条数据，已查看');
         // this.pages.total = '';
