@@ -4,7 +4,7 @@
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <!--<el-menu-item index="1">处理中心</el-menu-item>-->
       <el-submenu index="2">
-        <template slot="title" >guo.qi@renderg.com</template>
+        <template slot="title"  ><span class="el-icon-circle-check"></span>在线</template>
         <el-menu-item index="2-1">
           <router-link to="/login" exact @click="logout">退出登录</router-link>
         </el-menu-item>
@@ -17,7 +17,7 @@
         <!--</el-submenu>-->
       </el-submenu>
       <el-menu-item index="3">
-        <a href="#">下载</a>
+        <a href="#"><span class="el-icon-download"></span>下载</a>
       </el-menu-item>
     </el-menu>
   </div>

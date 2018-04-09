@@ -17,6 +17,7 @@ import store from './store/store'
 //   username: '',
 //   password: ''
 // }
+
 // 添加请求拦截器
 Axios.interceptors.request.use(config => {
   // 在发送请求之前做些什么
@@ -47,7 +48,6 @@ Axios.interceptors.response.use(response => {
   // 对响应数据做点什么
   let loading = Loading.service({});
   loading.close();
-  // console.log(response.data)
   return response;
 }, error => {
   // 对响应错误做点什么

@@ -77,11 +77,7 @@
                 this.$refs[formName].validate((valid) => {
                     if(valid) {
                       this.postData();
-                        this.$notify({
-                            title: '成功',
-                            message: '修改密码成功',
-                            type: 'success',
-                        });
+
                         // this.dis=!this.dis   //当用户点击提交按钮后，按钮状态变为true，不可用状态
                     } else {
                         console.log('error submit!!');
@@ -107,7 +103,12 @@
                 new_password: this.ruleForm2.pass,
               }
             }).then(res => {
-              this.$router.push('/login');
+              if(res.data.code===1){
+                this.$message.error(`${res.data.msg}`);
+              }else{
+                this.$message.success(`${res.data.msg}`);
+                this.$router.push('/login');
+              }
               console.log(res);
             }).catch(error=>{
               console.log(error);

@@ -4,19 +4,24 @@
 
     <!--form表单-->
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-input type="hidden" v-model="formInline.user_id" placeholder="user_id"></el-input>
+
       <el-form-item label="起始时间">
-        <el-date-picker v-model="value6" type="daterange" range-separator="至" start-placeholder="开始日期"
-                        end-placeholder="结束日期">
+        <el-date-picker v-model="formInline.submit_date" type="daterange" range-separator="至" start-placeholder="开始日期"
+                        end-placeholder="结束日期" format="yyyy-MM-dd"  value-format="yyyy-MM-dd">
         </el-date-picker>
       </el-form-item>
 
       <el-form-item label="账户">
-        <el-input v-model="formInline.account" placeholder="账户"></el-input>
+        <el-select v-model="formInline.account_name" placeholder="请选择">
+          <el-option v-for="item in accountOptions" :key="item[0]" :label="item[1]" :value="item[0]">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="项目">
-        <el-select v-model="value" placeholder="请选择">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-select v-model="formInline.project_name" placeholder="请选择">
+          <el-option v-for="item in projectOptions" :key="item[0]" :label="item[1]" :value="item[0]">
           </el-option>
         </el-select>
       </el-form-item>
@@ -29,14 +34,24 @@
 
     <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" sort-by="{tableData.name}"
               style="width: 100%;margin-left:10px">
-      <el-table-column prop="id" label="id" width="240px" sortable>
+      <el-table-column prop="_id" label="id" sortable >
       </el-table-column>
 
-      <el-table-column prop="fileName" label="文件名" width="240px" sortable></el-table-column>
+      <el-table-column prop="filename" label="文件名" sortable width="450"></el-table-column>
 
-      <el-table-column prop="fileSize" label="文件大小" width="240px"></el-table-column>
+      <el-table-column prop="length" label="文件大小" width="200"></el-table-column>
 
-      <el-table-column prop="date" label="导出时间" width="240px" sortable></el-table-column>
+      <el-table-column prop="date" label="导出时间"  sortable></el-table-column>
+
+      <el-table-column  label="操作" >
+        <template slot-scope="scope">
+
+            <el-button size="mini"  type="success" icon="el-icon-download" @click="download(scope.row)" title="下载"></el-button>
+
+            <el-button size="mini"  type="danger" icon="el-icon-delete" @click="deleted(scope.row)" title="删除"></el-button>
+        </template>
+
+      </el-table-column>
     </el-table>
     <!--分页-->
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -55,22 +70,33 @@
       return {
         //form表单
         formInline: {
-          account: '',
-          project: ''
+          user_id:null,
+          account_name: '',
+          project_name: '',
+          submit_date:'',
         },
 
-        options: [
-          {
-            value: '123456789'
-          }
-        ],
-        value6: '',
+        accountOptions: [],
+        projectOptions:[],
         value7: '',
+        // show:false,
         tableData: [],
         value: '',
         currentPage: 1,
         pageSize: 10,
         pages: {},
+        downloads:{
+          date:'',
+          filename:'',
+          length:'',
+          _id:'',
+        },
+        deletions:{
+          date:'',
+          filename:'',
+          length:'',
+          _id:'',
+        }
         // per_page:50,
         // page:1
         // page:null
@@ -82,7 +108,25 @@
       this.getData();
     },
     methods: {
+      //下载按钮
+      download(row){
+        console.log(row);
+        this.downloads=row
+        this.postDownload();
+      },
+      //删除按钮
+      deleted(row){
+      this.deletions=row;
+        console.log(row);
+      this.postDeletd();
+      },
+      //导出按钮
       onSubmit() {
+        if(this.formInline.submit_date==='') {
+          this.$message.warning('请选择起始时间');
+        }else{
+          this.postData();
+        }
         console.log('submit!');
       },
       handleSizeChange(size) {
@@ -97,18 +141,89 @@
         console.log(`当前页: ${currentPage}`);
       },
 
-      //通过此方法将分页数据渲染出来
+      //获取表单数据以及表格数据
       getData() {
-        // var recordUrl = this.HOST + '/record';
-        // this.$axios.get().then(res => {
-        //   console.log(res.data);
-        //   this.pages = res.data;
-        //   this.tableData = res.data.items
-        //   console.log(res.data.items)
-        // }).catch(error => {
-        //   console.log(error);
-        // })
-      }
+        var url = this.HOST + '/expense_export';
+        this.$axios.get(url).then(res => {
+          this.accountOptions = res.data.data.account_list;
+          this.projectOptions=res.data.data.project_list;
+          this.tableData=res.data.data.file_info
+          console.log(res.data);
+        }).catch(error => {
+          console.log(error);
+        })
+      },
+      //提交表单数据
+      postData(){
+        var url = this.HOST + '/expense_export';
+        var arr=this.accountOptions;
+        let userIds;
+        // console.log(this.accountOptions);
+        for(var i=0; i<arr.length; i++){
+          userIds=(arr[i][0]);
+          console.log(userIds)
+        }
+        this.$axios.post(url, {
+          operate: 'export',
+          export_data:{
+            user_id:userIds,
+            project_name:this.formInline.project_name,
+            start_date:this.formInline.submit_date[0],
+            end_date:this.formInline.submit_date[1]
+          }
+        }).then(res=>{
+          // console.log(arr[i][0]);
+          if(res.data.code===1) {
+            this.$message.error(`${res.data.msg}`);
+          }else {
+            this.$message.success(`${res.data.msg}`);
+          }
+          console.log(res);
+        }).catch(error=>{
+          console.log(error);
+        });
+      },
+      //下载数据操作
+      postDownload(){
+        var url = this.HOST + '/expense_export';
+
+        this.$axios.post(url, {
+          operate: 'download',
+          file_id: this.downloads._id,
+        }).then(res => {
+          if(res.data.code===1){
+            this.$message.error(`${res.data.msg}`);
+          }else{
+            this.$message.success(`${res.data.msg}`);
+          }
+          console.log(res);
+        }).catch(error=>{
+          console.log(error);
+        })
+      },
+      //删除数据操作
+      postDeletd(){
+        var url = this.HOST + '/expense_export';
+        let params_post={
+          operate: 'remove',
+          file_id: this.deletions._id,
+        }
+        this.$axios.post(url,params_post,{responseType:'arraybuffer'}).then(res => {
+          let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
+
+          let objectUrl = URL.createObjectURL(blob);
+
+          window.location.href = objectUrl;
+          if(res.data.code===1){
+            this.$message.error(`${res.data.msg}`);
+          }else{
+            this.$message.success(`${res.data.msg}`);
+          }
+          console.log(res.data);
+        }).catch(error=>{
+          console.log(error);
+        })
+      },
     }
   }
 </script>
