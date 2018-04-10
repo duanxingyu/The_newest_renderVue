@@ -140,7 +140,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-
+            this.postData();
           } else {
 
             console.log('error submit!!');
@@ -175,25 +175,28 @@
           }
         });
 
+      },
+      postData(){
+        let url=this.HOST+'/register';
+        this.$axios.post(url,{
+          operate:'forgot_password',
+          validate_data:{
+            phone:this.loginForm.phone,
+            // phone_validate:this.loginForm.validateCode,
+            password:this.loginForm.pass
+          }
+        }).then(res=>{
+          if(res.data.code===1){
+            this.$message.error(`${res.data.msg}`);
+          }else{
+            this.$message.success(`${res.data.msg}`);
+            this.$router.push('/login');
+          }
+          console.log(res.data);
+        }).catch(error=>{
+          console.log(error);
+        })
       }
-        // sendMsg() {
-      //   const TIME_COUNT=180;
-      //   this.disabled=false;
-      //   if(!this.timer) {
-      //     this.count=TIME_COUNT;
-      //     this.show=false;
-      //     this.timer=setInterval(()=>{
-      //       if(this.count>0&&this.count<=TIME_COUNT) {
-      //         this.count--;
-      //       }else {
-      //         this.show=true;
-      //         clearInterval(this.timer);
-      //         this.timer=null;
-      //         this.disabled=true;
-      //       }
-      //     },1000)
-      //   }
-      // }
     },
 
   }

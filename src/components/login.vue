@@ -79,8 +79,12 @@
               username: this.loginForm.username,
               password: this.loginForm.pass
             }).then(res => {
-              // console.log(res.data);
+              // console.log(res.data['user_name']);
+
               this.$message.success('登录成功');
+              let username=res.data['user_name'];
+              console.log(username);
+              this.$store.commit('set_username',username);
               let data = res.data;
               //根据store中set_token方法将token保存至localStorage中，data["Authentication-Token"]，获取token的value值
               this.$store.commit('set_token', data["Authentication-Token"]);
@@ -91,7 +95,6 @@
               } else {
                 this.$router.replace('/login');
               }
-
 
             }).catch(error => {
               this.loading = false

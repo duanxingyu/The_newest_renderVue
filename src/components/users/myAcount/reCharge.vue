@@ -63,8 +63,11 @@
         </el-form-item>
         <el-form-item label="支付方式" :label-width="formLabelWidth">
           <el-radio-group v-model="radio2">
+            <!--支付宝-->
             <el-radio :label="1"><img src="../../../assets/alipay.svg" width="40" height="40"></el-radio>
+            <!--微信-->
             <el-radio :label="2"><img src="../../../assets/weixin.svg" width="40" height="40"></el-radio>
+            <!--银联-->
             <el-radio :label="3"><img src="../../../assets/yinlian.svg" width="50" height="50"></el-radio>
           </el-radio-group>
         </el-form-item>
@@ -100,7 +103,7 @@
     data() {
       return {
         form1: {
-          money: '',
+          money: null,
         },
         form2: {
           crashNumber: '',
@@ -122,11 +125,6 @@
           }, {
             type: 'number',
             message: '金额只能为数值'
-          }, {
-            min: 5,
-            max: 50000,
-            // type:'number',
-            message: '金额在5~50000元之间'
           }]
         },
         formLabelWidth: '15%',
@@ -213,6 +211,26 @@
         console.log(`当前页: ${currentPage}`);
       },
       //获取表格数据
+
+      //现金充值post
+      postCrash(){
+        let url = this.HOST + '/user_recharge';
+        this.$axios.post(url,{
+          recharge_data:{
+            type:this.radio2,
+            url:'http://192.168.10.197:8080/reCharge',
+            price:this.form1.money
+          }
+        }).then(res=>{
+          if(res.data.code===0) {
+            window.location.href=`${res.data.url}`;
+          }
+          console.log(res.data);
+        }).catch(error=>{
+          console.log(error);
+        })
+      },
+
       //代金券充值post
       postCharge(){
         var url=this.HOST+'/coupon_charge';
@@ -233,11 +251,7 @@
       dialogSubmit1(form1) {
         this.$refs[form1].validate((valid) => {
           if (valid) {
-            this.$notify({
-              title: '成功',
-              message: '修改成功',
-              type: 'success'
-            });
+            this.postCrash();
             this.dialogFormVisible = false
           } else {
             console.log('error submit!!');

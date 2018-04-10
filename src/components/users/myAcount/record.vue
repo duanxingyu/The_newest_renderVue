@@ -58,12 +58,14 @@
                    :current-page.sync="currentPage" :page-sizes="[5,10, 20, 30, 40]"
                    :page-size="this.pageSize"
                    layout="total, sizes, prev, pager, next, jumper"
-                   :total="pages.total">
+                   :total="this.tableData.length">
     </el-pagination>
   </div>
 </template>
 
 <script>
+  import axios from 'axios'
+  import store from '../../../store/store'
   export default {
     name: 'record',
     data() {
@@ -107,12 +109,15 @@
     created() {
       this.getData();
     },
+
     methods: {
       //下载按钮
       download(row){
         console.log(row);
         this.downloads=row
-        this.postDownload();
+        this.getDownload();
+        // let url=this.HOST+'/expense_export';
+        // window.open(url + '/' + this.downloads._id);
       },
       //删除按钮
       deleted(row){
@@ -143,30 +148,31 @@
 
       //获取表单数据以及表格数据
       getData() {
-        var url = this.HOST + '/expense_export';
+        let url = this.HOST + '/expense_export';
         this.$axios.get(url).then(res => {
           this.accountOptions = res.data.data.account_list;
           this.projectOptions=res.data.data.project_list;
-          this.tableData=res.data.data.file_info
+          this.tableData=res.data.data.file_info;
           console.log(res.data);
         }).catch(error => {
           console.log(error);
         })
       },
-      //提交表单数据
+      //导出表单数据
       postData(){
-        var url = this.HOST + '/expense_export';
-        var arr=this.accountOptions;
+        let url = this.HOST + '/expense_export';
+        let arr=this.accountOptions;
         let userIds;
         // console.log(this.accountOptions);
         for(var i=0; i<arr.length; i++){
-          userIds=(arr[i][0]);
-          console.log(userIds)
+          // userIds=(arr[i][0]);
+          console.log(arr[i][0]);
         }
+
         this.$axios.post(url, {
           operate: 'export',
           export_data:{
-            user_id:userIds,
+            user_id:arr[i][0],
             project_name:this.formInline.project_name,
             start_date:this.formInline.submit_date[0],
             end_date:this.formInline.submit_date[1]
@@ -184,22 +190,10 @@
         });
       },
       //下载数据操作
-      postDownload(){
-        var url = this.HOST + '/expense_export';
-
-        this.$axios.post(url, {
-          operate: 'download',
-          file_id: this.downloads._id,
-        }).then(res => {
-          if(res.data.code===1){
-            this.$message.error(`${res.data.msg}`);
-          }else{
-            this.$message.success(`${res.data.msg}`);
-          }
-          console.log(res);
-        }).catch(error=>{
-          console.log(error);
-        })
+      getDownload(){
+        let url = this.HOST + '/expense_download';
+        let objectUrl = url+'/'+this.downloads._id;
+        window.open(objectUrl);
       },
       //删除数据操作
       postDeletd(){
@@ -208,12 +202,8 @@
           operate: 'remove',
           file_id: this.deletions._id,
         }
-        this.$axios.post(url,params_post,{responseType:'arraybuffer'}).then(res => {
-          let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
+        this.$axios.post(url,params_post).then(res => {
 
-          let objectUrl = URL.createObjectURL(blob);
-
-          window.location.href = objectUrl;
           if(res.data.code===1){
             this.$message.error(`${res.data.msg}`);
           }else{
@@ -231,5 +221,8 @@
 <style scoped>
   h2, form, .el-pagination {
     margin: 10px 10px;
+  }
+  #main{
+    padding-bottom: 50px;
   }
 </style>

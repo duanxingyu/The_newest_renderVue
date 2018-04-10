@@ -4,7 +4,7 @@
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <!--<el-menu-item index="1">处理中心</el-menu-item>-->
       <el-submenu index="2">
-        <template slot="title"  ><span class="el-icon-circle-check"></span>在线</template>
+        <template slot="title"  ><span class="el-icon-circle-check"></span>{{this.$store.state.username}}</template>
         <el-menu-item index="2-1">
           <router-link to="/login" exact @click="logout">退出登录</router-link>
         </el-menu-item>

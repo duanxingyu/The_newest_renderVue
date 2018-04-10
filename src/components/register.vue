@@ -140,7 +140,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-
+            this.postData();
           } else {
 
             console.log('error submit!!');
@@ -175,10 +175,31 @@
             this.disabled = false
           }
         });
+      },
+      postData(){
+        let url=this.HOST+'/register';
+        this.$axios.post(url,{
+          operate:'phone_register',
+          register_data:{
+            phone:this.loginForm.phone,
+            user_name:this.loginForm.username,
+            // phone_validate:this.loginForm.validateCode,
+            password:this.loginForm.pass
+          }
+        }).then(res=>{
+          if(res.data.code===1){
+            this.$message.error(`${res.data.msg}`);
+          }else{
+            this.$message.success(`${res.data.msg}`);
+          }
+          console.log(res.data);
+        }).catch(error=>{
+          console.log(error);
+        })
       }
     }
 
-  }
+  };
 </script>
 
 <style scoped>
