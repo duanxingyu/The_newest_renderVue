@@ -9,6 +9,9 @@ export default new Vuex.Store({
     token:'',
     username:'',
     role:'',
+    yinlian:{},
+    yinlian_url:'',
+    weixin:{}
   },
   mutations:{
     set_token(state, token) {
@@ -26,6 +29,18 @@ export default new Vuex.Store({
     set_role(state,role) {
       state.role = role;
       sessionStorage.role=role
+    },
+    set_yinlian(state,yinlian) {
+      state.yinlian=yinlian;
+      sessionStorage.yinlian=yinlian
+    },
+    set_yinlian_url(state,yinlian_url) {
+      state.yinlian_url=yinlian_url;
+      sessionStorage.yinlian_url=yinlian_url;
+    },
+    set_weixin(state,weixin) {
+     state.weixin=weixin;
+     sessionStorage.weixin=weixin;
     }
   }
 })

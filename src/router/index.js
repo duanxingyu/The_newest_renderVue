@@ -15,6 +15,8 @@ import ChildAcount from '@/components/users/myAcount/childAcount'
 import Record from '@/components/users/myAcount/record'
 import Crash from '@/components/users/myAcount/crash'
 import ReCharge from '@/components/users/myAcount/reCharge'
+import Yinlian from '@/components/users/myAcount/reCharge_yinlian'
+import Weixin from '@/components/users/myAcount/reCharge_weixin'
 import Setting from '@/components/users/myAcount/setting'
 
 
@@ -62,6 +64,14 @@ const routes = [{
       name: '充值',
       component: ReCharge
     }, {
+      path: 'reCharge_yinlian',
+      name: '银联',
+      component: Yinlian
+    }, {
+      path: 'reCharge_weixin',
+      name: '微信',
+      component: Weixin
+    }, {
       path: 'setting',
       name: '通知设置',
       component: Setting
@@ -107,13 +117,21 @@ const routes = [{
 // 页面刷新时，重新赋值token
 if (sessionStorage.getItem('token')) {
   store.commit('set_token', sessionStorage.getItem('token'))
-}
+};
+if(sessionStorage.getItem('username')){
+  store.commit('set_username', sessionStorage.getItem('username'));
+};
+if(sessionStorage.getItem('yinlian_url')){
+  store.commit('set_yinlian_url', sessionStorage.getItem('yinlian_url'));
+};
+if (sessionStorage.getItem('weixin')){
+  store.commit('set_weixin', sessionStorage.getItem('weixin'));
+};
 
 const router = new Router({
   mode: "history",
   routes
 });
-
 router.beforeEach((to, from, next) => {
   if (to.matched.some(r => r.meta.requireAuth)) {
     if (store.state.token) {

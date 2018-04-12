@@ -108,19 +108,19 @@
               <el-button type="primary" size="mini" @click="handleOut(scope.$index, scope.row)">转出</el-button>
             </el-popover>
 
-            <el-button size="mini" round @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑
+            <el-button size="mini" type="success"  @click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true">编辑
             </el-button>
-            <el-button size="mini" round type="info" v-popover:popoverIn>转入</el-button>
+            <el-button size="mini"  type="info" v-popover:popoverIn>转入</el-button>
             <!--@click="handleIn(scope.$index, scope.row)"-->
 
-            <el-button size="mini" round v-popover:popoverOut>转出</el-button>
-            <el-button size="mini" round type="danger"
+            <el-button size="mini"  v-popover:popoverOut>转出</el-button>
+            <el-button size="mini"  type="danger"
                        @click="ModPass(scope.$index, scope.row),dialogFormVisible3=true">修改密码
             </el-button>
           </div>
           <div v-else>
-            <el-button size="mini" round>
-              <router-link to="/userInfo">编辑</router-link>
+            <el-button size="mini" type="success" >
+              <router-link to="/userInfo" style="color:#ffffff;">编辑</router-link>
             </el-button>
             <!--@click="handleEdit(scope.$index, scope.row),dialogFormVisible2 = true"-->
           </div>
@@ -381,11 +381,6 @@
           if (valid) {
             this.postData();
             this.dialogFormVisible1 = false;
-            this.$notify({
-              title: '成功',
-              message: '修改成功',
-              type: 'success'
-            });
 
           } else {
             console.log('error submit!!');
@@ -426,11 +421,17 @@
             password: this.form.password
           }
         }).then(res => {
+
           let NewPage = '_empty' + '?time=' + new Date().getTime() / 1000
           // 之后将页面push进去
           this.$router.push(NewPage)
           // 再次返回上一页即可
           this.$router.go(-1)
+          if(res.data.code===0){
+            this.$message.success(`${res.data.msg}`);
+          }else{
+            this.$message.error(`${res.data.msg}`);
+          }
           console.log(res);
         }).catch(error => {
           console.log(error)
@@ -500,19 +501,19 @@
             amount: this.num1
           }
         }).then(res => {
-          let NewPage = '_empty' + '?time=' + new Date().getTime() / 1000
+          let NewPage = '_empty' + '?time=' + new Date().getTime() / 100
           // 之后将页面push进去
           this.$router.push(NewPage)
           // 再次返回上一页即可
           this.$router.go(-1);
 
-          setTimeout(() => {
+
             if (res.data.code === 1) {
               this.$message.error(`${res.data.msg}`)
             } else {
               this.$message.success(`${res.data.msg}`)
             }
-          }, 4500)
+
           console.log(res)
         }).catch(error => {
           console.log(error);
@@ -534,13 +535,12 @@
           this.$router.push(NewPage)
           // 再次返回上一页即可
           this.$router.go(-1);
-          setTimeout(() => {
+
             if (res.data.code === 1) {
               this.$message.error(`${res.data.msg}`)
             } else {
               this.$message.success(`${res.data.msg}`)
             }
-          }, 4000)
 
           console.log(res)
         }).catch(error => {

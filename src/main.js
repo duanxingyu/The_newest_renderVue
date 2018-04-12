@@ -11,8 +11,6 @@ import childAccount from './util/childAccount'
 import Axios from 'axios'
 import Vuex from 'vuex'
 import store from './store/store'
-
-
 // Axios.defaults.auth = {
 //   username: '',
 //   password: ''
@@ -128,6 +126,10 @@ Vue.prototype.$axios = Axios
 // 跨域请求问题
 Vue.prototype.HOST = "/api"
 
+
+
+ // Vue.prototype.$http=`http://${this.devWebpackConfig.devServer.host}:${port}`
+// Vue.prototype.$http=`http://${devWebpackConfig.devServer.host}:${port}`
 Vue.use(Vuex)
 Vue.use(Element)
 Vue.config.productionTip = false

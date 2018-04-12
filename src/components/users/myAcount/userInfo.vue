@@ -168,11 +168,6 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.postData();
-            this.$notify({
-              title: '成功',
-              message: '修改成功',
-              type: 'success'
-            });
             // this.dis=!this.dis
           } else {
             console.log('error submit!!');
@@ -202,6 +197,11 @@
             company_url:this.forms.company_url
           }
         }).then(res=>{
+          if(res.data.code===0) {
+            this.$message.success(`${res.data.msg}`);
+          }else{
+            this.$message.error(`${res.data.msg}`);
+          }
           console.log(res)
         }).catch(error=>{
           console.log(error)

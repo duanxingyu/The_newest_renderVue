@@ -48,7 +48,7 @@
 
             <el-button size="mini"  type="success" icon="el-icon-download" @click="download(scope.row)" title="下载"></el-button>
 
-            <el-button size="mini"  type="danger" icon="el-icon-delete" @click="deleted(scope.row)" title="删除"></el-button>
+            <el-button size="mini"  type="danger" icon="el-icon-delete" @click.native.prevent="deleted(scope.row)" title="删除"></el-button>
         </template>
 
       </el-table-column>
@@ -73,7 +73,7 @@
         //form表单
         formInline: {
           user_id:null,
-          account_name: '',
+          account_name: null,
           project_name: '',
           submit_date:'',
         },
@@ -98,7 +98,8 @@
           filename:'',
           length:'',
           _id:'',
-        }
+        },
+        exports:[]
         // per_page:50,
         // page:1
         // page:null
@@ -132,6 +133,9 @@
         }else{
           this.postData();
         }
+        this.exports=this.formInline;
+        console.log(this.exports);
+        console.log(this.exports["account_name"]);
         console.log('submit!');
       },
       handleSizeChange(size) {
@@ -161,23 +165,22 @@
       //导出表单数据
       postData(){
         let url = this.HOST + '/expense_export';
-        let arr=this.accountOptions;
-        let userIds;
-        // console.log(this.accountOptions);
-        for(var i=0; i<arr.length; i++){
-          // userIds=(arr[i][0]);
-          console.log(arr[i][0]);
-        }
-
+        console.log(this);
         this.$axios.post(url, {
           operate: 'export',
           export_data:{
-            user_id:arr[i][0],
+            // user_id:arr[1][0],
+            user_id:this.exports["account_name"],
             project_name:this.formInline.project_name,
             start_date:this.formInline.submit_date[0],
             end_date:this.formInline.submit_date[1]
           }
         }).then(res=>{
+          let NewPage = '_empty' + '?time=' + new Date().getTime() / 1000
+          // 之后将页面push进去
+          this.$router.push(NewPage)
+          // 再次返回上一页即可
+          this.$router.go(-1);
           // console.log(arr[i][0]);
           if(res.data.code===1) {
             this.$message.error(`${res.data.msg}`);
@@ -203,6 +206,11 @@
           file_id: this.deletions._id,
         }
         this.$axios.post(url,params_post).then(res => {
+          let NewPage = '_empty' + '?time=' + new Date().getTime() / 1000
+          // 之后将页面push进去
+          this.$router.push(NewPage)
+          // 再次返回上一页即可
+          this.$router.go(-1);
 
           if(res.data.code===1){
             this.$message.error(`${res.data.msg}`);

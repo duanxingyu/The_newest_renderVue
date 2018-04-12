@@ -17,7 +17,6 @@
         <div class="list-item">单价：<span class="list-value">{{ i.draw_unit }}元</span></div>
       </div>
     </el-card>
-
     <el-tabs type="border-card" class="tabsCard">
       <!--<el-tab-pane label="账户余额详情">-->
         <!--<el-table :data="tableData" style="width: 100%">-->
@@ -37,7 +36,7 @@
                        :current-page.sync="currentPage" :page-sizes="[5,10,20,40,80]"
                        :page-size="pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
-                       :total="pages.total">
+                       :total="this.tableData1.length">
         </el-pagination>
       </el-tab-pane>
       <el-tab-pane label="代金券充值记录">
@@ -50,7 +49,7 @@
                        :current-page.sync="currentPage1" :page-sizes="[5,10,20,40,80]"
                        :page-size="pageSize1"
                        layout="total, sizes, prev, pager, next, jumper"
-                       :total="pages1.total">
+                       :total="this.tableData2.length">
         </el-pagination>
       </el-tab-pane>
     </el-tabs>
@@ -65,10 +64,11 @@
           <el-radio-group v-model="radio2">
             <!--支付宝-->
             <el-radio :label="1"><img src="../../../assets/alipay.svg" width="40" height="40"></el-radio>
-            <!--微信-->
-            <el-radio :label="2"><img src="../../../assets/weixin.svg" width="40" height="40"></el-radio>
             <!--银联-->
-            <el-radio :label="3"><img src="../../../assets/yinlian.svg" width="50" height="50"></el-radio>
+            <el-radio :label="2"><img src="../../../assets/yinlian.svg" width="50" height="50"></el-radio>
+            <!--<el-radio :label="2"><img src="../../../assets/weixin.svg" width="40" height="40"></el-radio>-->
+            <!--微信-->
+            <el-radio :label="3"><img src="../../../assets/weixin.svg" width="40" height="40"></el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -98,9 +98,12 @@
 
 <script>
   import axios from 'axios'
+  // import DevWebPackConfig from '../../../../build/webpack.dev.conf'
   export default {
     name: 'reCharge',
+
     data() {
+
       return {
         form1: {
           money: null,
@@ -146,16 +149,19 @@
         pageSize: 10,
         currentPage1: 1,
         pageSize1: 10,
-        pages: {},
-        pages1:{},
+
+        yinlian:{}
       }
 
     },
     created() {
       this.getData();
+      // console.log('http://' +host + ":" + port);
+
     },
     methods: {
       getData(){
+        // console.log('http://'+module.exports.dev.host+':'+module.exports.dev.port+'/reCharge');
         // var self=this;
         var url=this.HOST;
         // console.log(self);
@@ -222,10 +228,29 @@
             price:this.form1.money
           }
         }).then(res=>{
-          if(res.data.code===0) {
-            window.location.href=`${res.data.url}`;
+          //如果选中支付宝，跳转至该链接
+          if(this.radio2===1){
+            if(res.data.code===0) {
+              window.location.href=`${res.data.url}`;
+            }
+          }else if(this.radio2===2) {
+            // console.log(res.data.data.params.currencyCode);
+            // console.log(res.data.data.params)
+            //将post得到的数据赋值给this.yinlian 对象
+            this.yinlian=res.data.data
+            //将
+            this.$store.commit('set_yinlian',res.data.data.params);
+            this.$store.commit('set_yinlian_url',res.data.data.url)
+            this.$router.push('/reCharge_yinlian');
+          }else {
+            // alert('weixin')
+            this.$store.commit('set_weixin',res.data.data);
+            this.$router.push('/reCharge_weixin')
           }
-          console.log(res.data);
+
+
+
+          console.log(res.data.data);
         }).catch(error=>{
           console.log(error);
         })
@@ -252,7 +277,8 @@
         this.$refs[form1].validate((valid) => {
           if (valid) {
             this.postCrash();
-            this.dialogFormVisible = false
+            this.dialogFormVisible = false;
+            // this.$router.push('/yinlian')
           } else {
             console.log('error submit!!');
             this.$notify({

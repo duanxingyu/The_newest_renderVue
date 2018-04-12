@@ -1,3 +1,1 @@
-1.由于编写管理员界面，先关闭，router/index.js中的router beforeEach 函数以及main.js中的拦截器
-2.批量删除暂未解决
-3.路由参数配置，参见element-ui CNodejs社区项目
+1.充值页面，支付宝充值完后跳转回原来页面的地址为固定的，为写成动态的。
