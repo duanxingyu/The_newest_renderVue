@@ -224,7 +224,7 @@
         this.$axios.post(url,{
           recharge_data:{
             type:this.radio2,
-            url:'http://192.168.10.197:8080/reCharge',
+            url:'http://192.168.10.81:8000/reCharge',
             price:this.form1.money
           }
         }).then(res=>{
@@ -247,8 +247,6 @@
             this.$store.commit('set_weixin',res.data.data);
             this.$router.push('/reCharge_weixin')
           }
-
-
 
           console.log(res.data.data);
         }).catch(error=>{

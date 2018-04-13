@@ -17,7 +17,7 @@
         <!--</el-submenu>-->
       </el-submenu>
       <el-menu-item index="3">
-        <a href="#"><span class="el-icon-download"></span>下载</a>
+        <a :href="this.HOST+'/client/ifa_setup.exe'"><span class="el-icon-download"></span>下载</a>
       </el-menu-item>
     </el-menu>
   </div>

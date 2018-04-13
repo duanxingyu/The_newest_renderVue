@@ -36,6 +36,7 @@
 <script>
   import store from '../store/store'
   import {Loading} from 'element-ui'
+  import axios from 'axios'
   export default {
     name: "login",
     data() {
@@ -72,41 +73,60 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true
-            this.loginBtn = "登录中..."
+            // this.loginBtn = "登录中..."
+
             var url = this.HOST + "/session";
             //根据api接口获取token
             this.$axios.post(url, {
               username: this.loginForm.username,
               password: this.loginForm.pass
             }).then(res => {
-              // console.log(res.data['user_name']);
+              console.log(res.data);
+              if(res.data.code===1) {
+                this.$message.error(`${res.data.msg}`);
+                this.loading = false
+                this.loginBtn = "登录"
+              }else if(res.data.code===-1){
+                this.$store.commit('set_userId',res.data.data.user_id);
+                let data = res.data.data;
+                //根据store中set_token方法将token保存至localStorage中，data["Authentication-Token"]，获取token的value值
+                this.$store.commit('set_token', data["Authentication-Token"]);
+                console.log(data["Authentication-Token"]);
+                this.$message.error(`${res.data.msg}`);
+                this.loading = false
+                this.loginBtn = "登录"
+                this.$router.push('/userInfo_perfect');
 
-              this.$message.success('登录成功');
-              let username=res.data['user_name'];
-              console.log(username);
-              this.$store.commit('set_username',username);
-              let data = res.data;
-              //根据store中set_token方法将token保存至localStorage中，data["Authentication-Token"]，获取token的value值
-              this.$store.commit('set_token', data["Authentication-Token"]);
+              }else{
 
-              if (store.state.token) {
-                this.$router.push('/')
-                console.log(store.state.token)
-              } else {
-                this.$router.replace('/login');
+                let username=res.data.data['user_name'];
+                // console.log(username);
+                this.$store.commit('set_username',username);
+                let data = res.data.data;
+                //根据store中set_token方法将token保存至localStorage中，data["Authentication-Token"]，获取token的value值
+                this.$store.commit('set_token', data["Authentication-Token"]);
+                console.log(data["Authentication-Token"]);
+
+                if (store.state.token) {
+                  this.$router.push('/')
+                  console.log(store.state.token)
+                } else {
+                  this.$router.replace('/login');
+                }
+
+                this.$message.success(`${res.data.msg}`);
               }
+              console.log(res.data);
 
             }).catch(error => {
+              console.log(error);
               this.loading = false
               this.loginBtn = "登录"
-              this.$message.error('账号或密码错误');
               //如果登录失败，加载动画停止
               let loading = Loading.service({});
               loading.close();
-              console.log(error);
             })
           } else {
-
             console.log('error submit!!');
 
             return false;

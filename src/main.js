@@ -34,7 +34,7 @@ Axios.interceptors.request.use(config => {
 }, error => {
   // 对请求错误做些什么
   console.log("发送失败");
-  console.log(error)
+  // console.log(error)
   let loading = Loading.service({});
   loading.close();
 
@@ -66,7 +66,7 @@ Axios.interceptors.response.use(response => {
   if (error.response) {
     switch (error.response.status) {
       case 401:
-        this.$store.commit('del_token');
+        // this.$store.commit('del_token');
         router.replace({
           path: '/login',
           query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面

@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state:{
     token:'',
+    user_id:null,
     username:'',
     role:'',
     yinlian:{},
@@ -21,6 +22,10 @@ export default new Vuex.Store({
     del_token(state) {
       state.token = '';
       sessionStorage.removeItem('token')
+    },
+    set_userId(state,user_id){
+      state.user_id=user_id;
+      sessionStorage.user_id=user_id;
     },
     set_username(state,username){
       state.username=username;

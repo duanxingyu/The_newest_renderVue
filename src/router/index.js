@@ -79,52 +79,59 @@ const routes = [{
   ]
 
 }, {
-      path: '/login',
-      component: Login
-    }, {
-      path: '/register',
-      component: Register
-    }, {
-      path: '/forgetPass',
-      component: ForgetPass
-    }, {
-      path: '/allJobs',
-      component: (resolve) => require(['../components/admins/account/allUsers.vue'], resolve)
-    }, {
-      path: '/customer',
-      component: (resolve) => require(['../components/admins/account/customer.vue'], resolve)
-    }, {
-      path: '/renderManger',
-      component: (resolve) => require(['../components/admins/account/renderManger.vue'], resolve)
-    }, {
-      path: '/salesMan',
-      component: (resolve) => require(['../components/admins/account/salesMan.vue'], resolve)
-    }, {
-      path: '/visitor',
-      component: (resolve) => require(['../components/admins/account/visitor.vue'], resolve)
-    }, {
-      path: '/roles',
-      component: (resolve) => require(['../components/admins/account/roles.vue'], resolve)
-    }, {
-      path: '/deadlineUsers',
-      component: (resolve) => require(['../components/admins/account/deadlineUsers.vue'], resolve)
-    }, {
-      path: '/setGroup',
-      component: (resolve) => require(['../components/admins/account/setGroup.vue'], resolve)
-    }]
+  path: '/login',
+  component: Login
+}, {
+  path: '/register',
+  component: Register
+}, {
+  path: '/forgetPass',
+  component: ForgetPass
+},{
+  path: '/userInfo_perfect',
+  name:'完善信息',
+  component: (resolve) => require(['../components/users/myAcount/userInfo_perfect.vue'], resolve)
+}, {
+  path: '/allJobs',
+  component: (resolve) => require(['../components/admins/account/allUsers.vue'], resolve)
+}, {
+  path: '/customer',
+  component: (resolve) => require(['../components/admins/account/customer.vue'], resolve)
+}, {
+  path: '/renderManger',
+  component: (resolve) => require(['../components/admins/account/renderManger.vue'], resolve)
+}, {
+  path: '/salesMan',
+  component: (resolve) => require(['../components/admins/account/salesMan.vue'], resolve)
+}, {
+  path: '/visitor',
+  component: (resolve) => require(['../components/admins/account/visitor.vue'], resolve)
+}, {
+  path: '/roles',
+  component: (resolve) => require(['../components/admins/account/roles.vue'], resolve)
+}, {
+  path: '/deadlineUsers',
+  component: (resolve) => require(['../components/admins/account/deadlineUsers.vue'], resolve)
+}, {
+  path: '/setGroup',
+  component: (resolve) => require(['../components/admins/account/setGroup.vue'], resolve)
+}]
 
 
 // 页面刷新时，重新赋值token
 if (sessionStorage.getItem('token')) {
   store.commit('set_token', sessionStorage.getItem('token'))
 };
-if(sessionStorage.getItem('username')){
+if (sessionStorage.getItem('user_id')) {
+  store.commit('set_userId', sessionStorage.getItem('user_id'))
+};
+if (sessionStorage.getItem('username')) {
   store.commit('set_username', sessionStorage.getItem('username'));
 };
-if(sessionStorage.getItem('yinlian_url')){
+if (sessionStorage.getItem('yinlian_url')) {
   store.commit('set_yinlian_url', sessionStorage.getItem('yinlian_url'));
 };
-if (sessionStorage.getItem('weixin')){
+if (sessionStorage.getItem('weixin')) {
   store.commit('set_weixin', sessionStorage.getItem('weixin'));
 };
 

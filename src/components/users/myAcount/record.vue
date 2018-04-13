@@ -164,6 +164,7 @@
       },
       //导出表单数据
       postData(){
+
         let url = this.HOST + '/expense_export';
         console.log(this);
         this.$axios.post(url, {

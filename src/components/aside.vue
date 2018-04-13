@@ -61,11 +61,11 @@
                   充值
                 </el-menu-item>
               </router-link>
-              <router-link to="/setting">
-                <el-menu-item index="2-7">
-                  通知设置
-                </el-menu-item>
-              </router-link>
+              <!--<router-link to="/setting">-->
+                <!--<el-menu-item index="2-7">-->
+                  <!--通知设置-->
+                <!--</el-menu-item>-->
+              <!--</router-link>-->
             </el-menu-item-group>
           </el-submenu>
 
