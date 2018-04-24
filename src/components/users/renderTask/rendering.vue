@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>正在渲染任务</h2><br/>
-    <span>测试Checked:{{multipleSelection}}</span><br/>
+    <!--<span>测试Checked:{{multipleSelection}}</span><br/>-->
     <div class="btn">
 
       <el-badge :value="pages.total" :max="99" :is-dot="true" class="item">

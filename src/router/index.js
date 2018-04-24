@@ -115,6 +115,9 @@ const routes = [{
 }, {
   path: '/setGroup',
   component: (resolve) => require(['../components/admins/account/setGroup.vue'], resolve)
+},{
+  path:'*',
+  redirect:'/'              //若未找到以上路由地址，就重定向至'/'路径
 }]
 
 

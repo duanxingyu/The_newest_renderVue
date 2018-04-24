@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>已完成任务</h2>
-    <span>测试Checked:{{multipleSelection}}</span><br/>
+    <!--<span>测试Checked:{{multipleSelection}}</span><br/>-->
     <div class="btn">
       <el-badge :value="pages.total" :max="99" :is-dot="true" class="item">
         <el-button type="primary" size="medium" icon="el-icon-tickets" @click="listCount">列表</el-button>

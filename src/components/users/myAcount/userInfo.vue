@@ -27,7 +27,7 @@
           <el-form-item label="性别" prop="genders">
             <el-select v-model="forms.genders" placeholder="请选择性别">
               <el-option label="男" value="m"></el-option>
-              <el-option label="女" value="w"></el-option>
+              <el-option label="女" value="f"></el-option>
             </el-select>
           </el-form-item>
 
